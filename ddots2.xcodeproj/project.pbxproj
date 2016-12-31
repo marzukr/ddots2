@@ -17,6 +17,7 @@
 		8617AE201E15A1B400D13B90 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8617AE1E1E15A1B400D13B90 /* LaunchScreen.storyboard */; };
 		8617AE2B1E15A1B400D13B90 /* ddots2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8617AE2A1E15A1B400D13B90 /* ddots2Tests.swift */; };
 		8617AE361E15A1B400D13B90 /* ddots2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8617AE351E15A1B400D13B90 /* ddots2UITests.swift */; };
+		865570C71E172F0C00F2D173 /* dotExplode.sks in Resources */ = {isa = PBXBuildFile; fileRef = 865570C61E172F0C00F2D173 /* dotExplode.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		8617AE311E15A1B400D13B90 /* ddots2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ddots2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8617AE351E15A1B400D13B90 /* ddots2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ddots2UITests.swift; sourceTree = "<group>"; };
 		8617AE371E15A1B400D13B90 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		865570C61E172F0C00F2D173 /* dotExplode.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = dotExplode.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 				8617AE111E15A1B400D13B90 /* GameScene.sks */,
 				8617AE131E15A1B400D13B90 /* Actions.sks */,
 				8617AE151E15A1B400D13B90 /* GameScene.swift */,
+				865570C61E172F0C00F2D173 /* dotExplode.sks */,
 				8617AE171E15A1B400D13B90 /* GameViewController.swift */,
 				8617AE191E15A1B400D13B90 /* Main.storyboard */,
 				8617AE1C1E15A1B400D13B90 /* Assets.xcassets */,
@@ -249,6 +252,7 @@
 				8617AE1D1E15A1B400D13B90 /* Assets.xcassets in Resources */,
 				8617AE201E15A1B400D13B90 /* LaunchScreen.storyboard in Resources */,
 				8617AE141E15A1B400D13B90 /* Actions.sks in Resources */,
+				865570C71E172F0C00F2D173 /* dotExplode.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -526,6 +530,7 @@
 				8617AE3C1E15A1B400D13B90 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8617AE3D1E15A1B400D13B90 /* Build configuration list for PBXNativeTarget "ddots2Tests" */ = {
 			isa = XCConfigurationList;
@@ -534,6 +539,7 @@
 				8617AE3F1E15A1B400D13B90 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8617AE401E15A1B400D13B90 /* Build configuration list for PBXNativeTarget "ddots2UITests" */ = {
 			isa = XCConfigurationList;
@@ -542,6 +548,7 @@
 				8617AE421E15A1B400D13B90 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

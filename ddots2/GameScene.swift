@@ -31,6 +31,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     var buttons:[SKSpriteNode]! = []
     
     var isOnMenu:Bool = true
+    var isOnGameOver:Bool = false
     var isTouchingScreen:Bool = false
     
     struct PhysicsCategory
@@ -65,7 +66,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         }
         else
         {
-            if isTouchingScreen
+            if isTouchingScreen && !isOnGameOver
             {
                 slideSliders()
             }
@@ -79,7 +80,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
                 }
             }
             
-            if dots.count < 1
+            if dots.count < 1 && !isOnGameOver
             {
                 spawnDots()
             }
@@ -108,12 +109,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate
                     let moveLeft = SKAction.moveBy(x: self.frame.width/2 * -1, y: 0, duration: 0.25)
                     let moveUp = SKAction.moveBy(x: 0, y: self.frame.height/2, duration: 0.25)
                     let disappear = SKAction.fadeAlpha(to: 0, duration: 0.25)
-                    noAdsIcon.run(moveRight)
-                    infoIcon.run(moveRight)
-                    rateIcon.run(moveLeft)
-                    rankIcon.run(moveLeft)
-                    titleLabel.run(moveUp)
-                    playLabel.run(disappear)
+                    noAdsIcon.run(moveRight, completion: ({
+                        self.noAdsIcon.removeFromParent()
+                    }))
+                    infoIcon.run(moveRight, completion: ({
+                        self.infoIcon.removeFromParent()
+                    }))
+                    rateIcon.run(moveLeft, completion: ({
+                        self.rateIcon.removeFromParent()
+                    }))
+                    rankIcon.run(moveLeft, completion: ({
+                        self.rankIcon.removeFromParent()
+                    }))
+                    titleLabel.run(moveUp, completion: ({
+                        self.titleLabel.removeFromParent()
+                    }))
+                    playLabel.run(disappear, completion: ({
+                        self.playLabel.removeFromParent()
+                    }))
                     scrollSpeed = 12
                     isOnMenu = false
                 }
@@ -148,8 +161,79 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         }
         else
         {
-            print("Game Over")
+            if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask && !isOnGameOver
+            {
+                gameOver(body: contact.bodyA)
+            }
+            else
+            {
+                gameOver(body: contact.bodyB)
+            }
         }
+    }
+    
+    func gameOver(body: SKPhysicsBody)
+    {
+        for ball in dots
+        {
+            if ball.physicsBody == body && !isOnGameOver
+            {
+                isOnGameOver = true
+                ball.removeAllActions()
+                let shrinkAction = SKAction.scale(to: 0, duration: 0.1)
+                let explosion = SKEmitterNode(fileNamed: "dotExplode.sks")!
+                explosion.particleColorSequence = nil
+                explosion.particleColor = ball.fillColor
+                explosion.position = ball.position
+                ball.run(shrinkAction, completion: ({
+                    ball.removeFromParent()
+                }))
+                self.addChild(explosion)
+                let whiteFlash = SKShapeNode(rect: self.frame)
+                whiteFlash.fillColor = UIColor.white
+                whiteFlash.strokeColor = UIColor.clear
+                whiteFlash.zPosition = 6969
+                let fadeWhiteFlash = SKAction.fadeAlpha(to: 0, duration: 1)
+                self.addChild(whiteFlash)
+                whiteFlash.run(fadeWhiteFlash)
+                shake(times: 50)
+            }
+            break
+        }
+    }
+    
+    func shake(times: Int)
+    {
+        let dummyNode = SKNode()
+        dummyNode.removeFromParent()
+        for child in self.children
+        {
+            child.removeFromParent()
+            dummyNode.addChild(child)
+        }
+        self.addChild(dummyNode)
+        let initialPoint:CGPoint = dummyNode.position
+        let amplitudeX:Int = 32
+        let amplitudeY:Int = 20
+        var randomActions:[SKAction] = []
+//        randomActions.append(SKAction.wait(forDuration: 2))
+        for _ in 0..<times
+        {
+            let randX = Int(self.position.x) + Int(arc4random()) % amplitudeX - amplitudeX/2
+            let randY = Int(self.position.y) + Int(arc4random()) % amplitudeY - amplitudeY/2
+            let action = SKAction.move(to: CGPoint.init(x: CGFloat(randX), y: CGFloat(randY)), duration: 0.01)
+            randomActions.append(action)
+        }
+        let randomSequence:SKAction = SKAction.sequence(randomActions)
+        dummyNode.run(randomSequence, completion: ({
+            dummyNode.position = initialPoint
+            for child in dummyNode.children
+            {
+                child.removeFromParent()
+                self.addChild(child)
+            }
+            dummyNode.removeFromParent()
+        }))
     }
     
     func spawnDots()
