@@ -28,6 +28,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     var infoIcon:SKSpriteNode!
     var rateIcon:SKSpriteNode!
     var rankIcon:SKSpriteNode!
+    var homeIcon:SKSpriteNode!
     var buttons:[SKSpriteNode]! = []
     
     var isOnMenu:Bool = true
@@ -42,11 +43,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         static let all:UInt32 = UInt32.max
     }
     
+    var moveRight:SKAction!
+    var moveLeft:SKAction!
+    var moveUp:SKAction!
+    
+    var score:Int = 0
+    var scoreCounterLabel:SKLabelNode!
+    
+    //MARK: END OF VARIABLES
+    
     override func didMove(to view: SKView)
     {
         self.scene?.backgroundColor = UIColor(red: 242/255, green: 241/255, blue: 239/255, alpha: 1)
         self.physicsWorld.contactDelegate = self
         colors = [redColor,blueColor,greenColor,yellowColor]
+        
+        moveRight = SKAction.moveBy(x: self.frame.width/2, y: 0, duration: 0.25)
+        moveLeft = SKAction.moveBy(x: self.frame.width/2 * -1, y: 0, duration: 0.25)
+        moveUp = SKAction.moveBy(x: 0, y: self.frame.height/2, duration: 0.25)
         
         setupMenuLabels()
         
@@ -60,7 +74,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     override func update(_ currentTime: TimeInterval)
     {
-        if isOnMenu
+        if isOnMenu || isOnGameOver
         {
             slideSliders()
         }
@@ -92,7 +106,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         for touch in touches
         {
             let location = touch.location(in: self)
-            if isOnMenu
+            if isOnMenu || isOnGameOver
             {
                 var isButton = false
                 for button in buttons
@@ -103,30 +117,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate
                         isButton = true
                     }
                 }
-                if !isButton
+                if !isButton && isOnMenu
                 {
-                    let moveRight = SKAction.moveBy(x: self.frame.width/2, y: 0, duration: 0.25)
-                    let moveLeft = SKAction.moveBy(x: self.frame.width/2 * -1, y: 0, duration: 0.25)
-                    let moveUp = SKAction.moveBy(x: 0, y: self.frame.height/2, duration: 0.25)
+                    playLabel.removeAllActions()
                     let disappear = SKAction.fadeAlpha(to: 0, duration: 0.25)
                     noAdsIcon.run(moveRight, completion: ({
-                        self.noAdsIcon.removeFromParent()
+                        self.noAdsIcon.isHidden = true
                     }))
                     infoIcon.run(moveRight, completion: ({
-                        self.infoIcon.removeFromParent()
+                        self.infoIcon.isHidden = true
                     }))
                     rateIcon.run(moveLeft, completion: ({
-                        self.rateIcon.removeFromParent()
+                        self.rateIcon.isHidden = true
                     }))
                     rankIcon.run(moveLeft, completion: ({
-                        self.rankIcon.removeFromParent()
+                        self.rankIcon.isHidden = true
                     }))
                     titleLabel.run(moveUp, completion: ({
-                        self.titleLabel.removeFromParent()
+                        self.titleLabel.isHidden = true
                     }))
                     playLabel.run(disappear, completion: ({
-                        self.playLabel.removeFromParent()
+                        self.playLabel.isHidden = true
                     }))
+                    let fadeIn = SKAction.fadeIn(withDuration: 0.25)
+                    scoreCounterLabel.run(fadeIn)
                     scrollSpeed = 12
                     isOnMenu = false
                 }
@@ -140,7 +154,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?)
     {
-        if isOnMenu
+        if isOnMenu || isOnGameOver
         {
             for button in buttons
             {
@@ -157,7 +171,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     {
         if contact.bodyA.node?.name == contact.bodyB.node?.name
         {
-            print("Same Color Collision")
+            if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask
+            {
+                score = score + (contact.bodyA.node?.userData!["Score"] as! Int)
+                contact.bodyA.node?.userData?.setValue(0, forKey: "Score")
+            }
+            else
+            {
+                score = score + (contact.bodyB.node?.userData!["Score"] as! Int)
+                contact.bodyB.node?.userData?.setValue(0, forKey: "Score")
+            }
+            scoreCounterLabel.text = "\(score)"
         }
         else
         {
@@ -172,6 +196,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         }
     }
     
+    //MARK: CUSTOM METHODS
+    
     func gameOver(body: SKPhysicsBody)
     {
         for ball in dots
@@ -179,6 +205,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             if ball.physicsBody == body && !isOnGameOver
             {
                 isOnGameOver = true
+                scrollSpeed = 2
                 ball.removeAllActions()
                 let shrinkAction = SKAction.scale(to: 0, duration: 0.1)
                 let explosion = SKEmitterNode(fileNamed: "dotExplode.sks")!
@@ -192,14 +219,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate
                 let whiteFlash = SKShapeNode(rect: self.frame)
                 whiteFlash.fillColor = UIColor.white
                 whiteFlash.strokeColor = UIColor.clear
-                whiteFlash.zPosition = 6969
+                whiteFlash.zPosition = 10
                 let fadeWhiteFlash = SKAction.fadeAlpha(to: 0, duration: 1)
                 self.addChild(whiteFlash)
+                whiteFlash.run(fadeWhiteFlash, completion: ({
+                    
+                }))
                 whiteFlash.run(fadeWhiteFlash)
                 shake(times: 50)
+                
+                gameOverMenuIcons()
             }
             break
         }
+    }
+    
+    func gameOverMenuIcons()
+    {
+        for button in buttons
+        {
+            button.isHidden = false
+        }
+        rankIcon.position = CGPoint(x: homeIcon.position.x + 150, y: 0)
+        homeIcon.run(moveRight)
+        rankIcon.run(moveRight)
+        rateIcon.position = noAdsIcon.position
+        rateIcon.run(moveLeft)
+        noAdsIcon.position = infoIcon.position
+        noAdsIcon.run(moveLeft)
+        
+        let fadeOut = SKAction.fadeOut(withDuration: 0.25)
+        scoreCounterLabel.run(fadeOut)
     }
     
     func shake(times: Int)
@@ -248,6 +298,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         let dot = SKShapeNode.init(circleOfRadius: 75/2)
         dot.fillColor = colors[randomColorIndex]
         dot.name = String(colors[randomColorIndex].description)
+        dot.userData = ["Score":1]
         dot.strokeColor = UIColor.clear
         dot.position = CGPoint(x: randomAbs, y: self.frame.height/2 + dot.frame.height/2)
         dot.physicsBody = SKPhysicsBody(circleOfRadius: 75/2)
@@ -271,6 +322,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         playLabel = self.childNode(withName: "playLabel") as! SKLabelNode
         playLabel.position = CGPoint(x: 0, y: titleLabel.position.y - titleLabel.frame.height/2 - 75)
         playLabel.fontColor = UIColor(red: 191/255, green: 191/255, blue: 191/255, alpha: 1)
+        let shrink = SKAction.scale(to: 0.85, duration: 0.75)
+        let expand = SKAction.scale(to: 1, duration: 0.75)
+        let cookieMonsterForever = SKAction.repeatForever(SKAction.sequence([shrink,expand]))
+        playLabel.run(cookieMonsterForever)
+        
         
         noAdsIcon = self.childNode(withName: "noAdsIcon") as! SKSpriteNode
         noAdsIcon.position = CGPoint(x: 25 + 50, y: 0)
@@ -284,12 +340,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         rankIcon = self.childNode(withName: "rankIcon") as! SKSpriteNode
         rankIcon.position = CGPoint(x: rateIcon.position.x - 150, y: 0)
         
-        buttons = [noAdsIcon, infoIcon, rateIcon, rankIcon]
+        homeIcon = self.childNode(withName: "homeIcon") as! SKSpriteNode
+        homeIcon.position = CGPoint(x: rankIcon.position.x - self.frame.width/2, y: 0)
+        homeIcon.isHidden = true
+        
+        buttons = [noAdsIcon, infoIcon, rateIcon, rankIcon, homeIcon]
         
         for button in buttons
         {
             button.color = SKColor.black
         }
+        
+        scoreCounterLabel = self.childNode(withName: "scoreCounterLabel") as! SKLabelNode
+        scoreCounterLabel.position = CGPoint(x: self.frame.maxX - 50, y: self.frame.maxY - 50)
+        scoreCounterLabel.fontColor = UIColor(red: 108/255, green: 122/255, blue: 137/255, alpha: 1)
+        scoreCounterLabel.zPosition = 5
+        scoreCounterLabel.alpha = 0
     }
     
     func slideSliders()
