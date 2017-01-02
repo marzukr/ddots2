@@ -46,9 +46,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     var moveRight:SKAction!
     var moveLeft:SKAction!
     var moveUp:SKAction!
+    var moveDown:SKAction!
     
     var score:Int = 0
     var scoreCounterLabel:SKLabelNode!
+    var scoreTitleLabel:SKLabelNode!
+    var scoreLabel:SKLabelNode!
+    var highScoreTitleLabel:SKLabelNode!
+    var highScoreLabel:SKLabelNode!
     
     //MARK: END OF VARIABLES
     
@@ -61,6 +66,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         moveRight = SKAction.moveBy(x: self.frame.width/2, y: 0, duration: 0.25)
         moveLeft = SKAction.moveBy(x: self.frame.width/2 * -1, y: 0, duration: 0.25)
         moveUp = SKAction.moveBy(x: 0, y: self.frame.height/2, duration: 0.25)
+        moveDown = SKAction.moveBy(x: 0, y: self.frame.height/2 * -1, duration: 0.25)
         
         setupMenuLabels()
         
@@ -115,6 +121,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate
                     {
                         button.colorBlendFactor = 0.5
                         isButton = true
+                        if button == homeIcon
+                        {
+                            startHomeOwnersAssociation()
+                        }
                     }
                 }
                 if !isButton && isOnMenu
@@ -198,6 +208,67 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     //MARK: CUSTOM METHODS
     
+    func startHomeOwnersAssociation()
+    {
+        infoIcon.position = CGPoint(x: noAdsIcon.position.x - self.frame.width, y: 0)
+        let fakeNoAds:SKSpriteNode! = noAdsIcon.copy() as! SKSpriteNode
+        fakeNoAds.position.x = infoIcon.position.x - 150
+        self.addChild(fakeNoAds)
+        let fakeRate:SKSpriteNode! = rateIcon.copy() as! SKSpriteNode
+        fakeRate.position.x = fakeNoAds.position.x - 150
+        self.addChild(fakeRate)
+        let fakeRank:SKSpriteNode! = rankIcon.copy() as! SKSpriteNode
+        fakeRank.position.x = fakeRate.position.x - 150
+        self.addChild(fakeRank)
+        
+        let newMoveRight = SKAction.moveBy(x: self.frame.width, y: 0, duration: 0.375)
+        let rightWingers:[SKSpriteNode] = [noAdsIcon,rateIcon,rankIcon,homeIcon]
+        let altRightWingers:[SKLabelNode] = [scoreTitleLabel,scoreLabel,highScoreLabel,highScoreTitleLabel]
+        for conservative in rightWingers
+        {
+            conservative.run(newMoveRight)
+        }
+        for neoNazi in altRightWingers
+        {
+            neoNazi.run(newMoveRight, completion: ({
+                neoNazi.position = neoNazi.userData!["OP"] as! CGPoint
+            }))
+        }
+        
+//        noAdsIcon.run(newMoveRight)
+//        rateIcon.run(newMoveRight)
+//        rankIcon.run(newMoveRight)
+//        homeIcon.run(newMoveRight)
+        
+        infoIcon.run(newMoveRight)
+        fakeNoAds.run(newMoveRight, completion: ({
+            self.noAdsIcon.position = fakeNoAds.position
+            fakeNoAds.removeFromParent()
+        }))
+        fakeRate.run(newMoveRight, completion: ({
+            self.rateIcon.position = fakeRate.position
+            fakeRate.removeFromParent()
+        }))
+        fakeRank.run(newMoveRight, completion: ({
+            self.rankIcon.position = fakeRank.position
+            fakeRank.removeFromParent()
+            self.isOnGameOver = false
+            self.isOnMenu = true
+            self.homeIcon.position = CGPoint(x: self.rankIcon.position.x - self.frame.width/2, y: 0)
+        }))
+        
+        titleLabel.position = CGPoint(x: -1 * self.frame.width, y: self.frame.height/4)
+        titleLabel.isHidden = false
+        playLabel.position = CGPoint(x: -1 * self.frame.width, y: titleLabel.position.y - titleLabel.frame.height/2 - 75)
+        playLabel.alpha = 1
+        playLabel.isHidden = false
+        titleLabel.run(newMoveRight)
+        playLabel.run(newMoveRight)
+        playLabel.run(playLabel.userData!["UA"] as! SKAction)
+        
+        score = 0
+    }
+    
     func gameOver(body: SKPhysicsBody)
     {
         for ball in dots
@@ -212,10 +283,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate
                 explosion.particleColorSequence = nil
                 explosion.particleColor = ball.fillColor
                 explosion.position = ball.position
-                ball.run(shrinkAction, completion: ({
-                    ball.removeFromParent()
-                }))
+                for dot in dots
+                {
+                    dot.run(shrinkAction, completion: ({
+                        dot.removeFromParent()
+                    }))
+                }
+                dots.removeAll()
                 self.addChild(explosion)
+                Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: ({_ in
+                    explosion.removeFromParent()
+                }))
+                
                 let whiteFlash = SKShapeNode(rect: self.frame)
                 whiteFlash.fillColor = UIColor.white
                 whiteFlash.strokeColor = UIColor.clear
@@ -223,9 +302,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate
                 let fadeWhiteFlash = SKAction.fadeAlpha(to: 0, duration: 1)
                 self.addChild(whiteFlash)
                 whiteFlash.run(fadeWhiteFlash, completion: ({
-                    
+                    whiteFlash.removeFromParent()
                 }))
-                whiteFlash.run(fadeWhiteFlash)
                 shake(times: 50)
                 
                 gameOverMenuIcons()
@@ -250,6 +328,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         
         let fadeOut = SKAction.fadeOut(withDuration: 0.25)
         scoreCounterLabel.run(fadeOut)
+        
+        scoreTitleLabel.run(moveDown)
+        scoreLabel.text = "\(score)"
+        scoreLabel.run(moveDown)
+        highScoreTitleLabel.run(moveDown)
+        highScoreLabel.run(moveDown)
     }
     
     func shake(times: Int)
@@ -266,7 +350,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         let amplitudeX:Int = 32
         let amplitudeY:Int = 20
         var randomActions:[SKAction] = []
-//        randomActions.append(SKAction.wait(forDuration: 2))
         for _ in 0..<times
         {
             let randX = Int(self.position.x) + Int(arc4random()) % amplitudeX - amplitudeX/2
@@ -325,6 +408,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         let shrink = SKAction.scale(to: 0.85, duration: 0.75)
         let expand = SKAction.scale(to: 1, duration: 0.75)
         let cookieMonsterForever = SKAction.repeatForever(SKAction.sequence([shrink,expand]))
+        playLabel.userData = ["UA":cookieMonsterForever]
         playLabel.run(cookieMonsterForever)
         
         
@@ -353,9 +437,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         
         scoreCounterLabel = self.childNode(withName: "scoreCounterLabel") as! SKLabelNode
         scoreCounterLabel.position = CGPoint(x: self.frame.maxX - 50, y: self.frame.maxY - 50)
-        scoreCounterLabel.fontColor = UIColor(red: 108/255, green: 122/255, blue: 137/255, alpha: 1)
+        scoreCounterLabel.fontColor = UIColor(red: 191/255, green: 191/255, blue: 191/255, alpha: 1)
         scoreCounterLabel.zPosition = 5
         scoreCounterLabel.alpha = 0
+        
+        scoreTitleLabel = self.childNode(withName: "scoreTitleLabel") as! SKLabelNode
+        scoreTitleLabel.position = CGPoint(x: 0, y: (self.frame.height*(3/8)) + self.frame.height/2)
+        scoreTitleLabel.userData = ["OP":scoreTitleLabel.position]
+        scoreTitleLabel.fontColor = UIColor(red: 191/255, green: 191/255, blue: 191/255, alpha: 1)
+        
+        scoreLabel = self.childNode(withName: "scoreLabel") as! SKLabelNode
+        scoreLabel.position = CGPoint(x: 0, y: scoreTitleLabel.position.y - scoreTitleLabel.frame.height/2 - 75)
+        scoreLabel.userData = ["OP":scoreLabel.position]
+        scoreLabel.fontColor = UIColor(red: 108/255, green: 122/255, blue: 137/255, alpha: 1)
+        
+        highScoreTitleLabel = self.childNode(withName: "highScoreTitleLabel") as! SKLabelNode
+        highScoreTitleLabel.position = CGPoint(x: 0, y: scoreLabel.position.y - scoreLabel.frame.height/2 - 75)
+        highScoreTitleLabel.userData = ["OP":highScoreTitleLabel.position]
+        highScoreTitleLabel.fontColor = UIColor(red: 191/255, green: 191/255, blue: 191/255, alpha: 1)
+        
+        highScoreLabel = self.childNode(withName: "highScoreLabel") as! SKLabelNode
+        highScoreLabel.position = CGPoint(x: 0, y: highScoreTitleLabel.position.y - highScoreTitleLabel.frame.height/2 - 75)
+        highScoreLabel.userData = ["OP":highScoreLabel.position]
+        highScoreLabel.fontColor = UIColor(red: 108/255, green: 122/255, blue: 137/255, alpha: 1)
     }
     
     func slideSliders()
