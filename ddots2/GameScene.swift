@@ -8,8 +8,9 @@
 
 import SpriteKit
 import GameplayKit
+import GameKit
 
-class GameScene: SKScene, SKPhysicsContactDelegate
+class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelegate
 {
     var sliders:[SKShapeNode]! = []
     var scrollSpeed:CGFloat = 2
@@ -33,6 +34,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     
     var isOnMenu:Bool = true
     var isOnGameOver:Bool = false
+    var isOnInfoScreen:Bool = false
     var isTouchingScreen:Bool = false
     
     struct PhysicsCategory
@@ -55,10 +57,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     var highScoreTitleLabel:SKLabelNode!
     var highScoreLabel:SKLabelNode!
     
+    var producedLabel:SKLabelNode!
+    var platiplurLabel:SKLabelNode!
+    var codedLabel:SKLabelNode!
+    var zukLabel:SKLabelNode!
+    var musicLabel:SKLabelNode!
+    var hessLabel:SKLabelNode!
+    var infoBackdrop:SKShapeNode!
+    
     //MARK: END OF VARIABLES
     
     override func didMove(to view: SKView)
     {
+        authPlayer()
         self.scene?.backgroundColor = UIColor(red: 242/255, green: 241/255, blue: 239/255, alpha: 1)
         self.physicsWorld.contactDelegate = self
         colors = [redColor,blueColor,greenColor,yellowColor]
@@ -112,7 +123,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         for touch in touches
         {
             let location = touch.location(in: self)
-            if isOnMenu || isOnGameOver
+            if (isOnMenu || isOnGameOver) && isOnInfoScreen == false
             {
                 var isButton = false
                 for button in buttons
@@ -124,6 +135,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate
                         if button == homeIcon
                         {
                             startHomeOwnersAssociation()
+                        }
+                        if button == rankIcon
+                        {
+                            showLeaderBoard()
+                        }
+                        if button == infoIcon
+                        {
+                            infoCredits()
                         }
                     }
                 }
@@ -153,6 +172,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate
                     scoreCounterLabel.run(fadeIn)
                     scrollSpeed = 12
                     isOnMenu = false
+                }
+            }
+            else if isOnInfoScreen
+            {
+                if platiplurLabel.contains(location)
+                {
+                    platiplurLabel.colorBlendFactor = 0.5
+                    platiplurLabel.color = UIColor.black
+                    let url = NSURL(string: "https://platiplur.com")
+                    UIApplication.shared.open(url as! URL, options: [:], completionHandler: { (success) in
+                        self.platiplurLabel.colorBlendFactor = 0
+                    })
+                }
+                else
+                {
+                    dismissInfo()
                 }
             }
             else
@@ -207,6 +242,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     }
     
     //MARK: CUSTOM METHODS
+    
+    func dismissInfo()
+    {
+        let newfadeOut = SKAction.fadeOut(withDuration: 0.25)
+        let newMoveRight = SKAction.moveBy(x: self.frame.width, y: 0, duration: 0.25)
+        let newMoveLeft = SKAction.moveBy(x: self.frame.width * -1, y: 0, duration: 0.25)
+        codedLabel.run(newMoveRight)
+        zukLabel.run(newMoveRight)
+        musicLabel.run(newMoveLeft)
+        hessLabel.run(newMoveLeft)
+        producedLabel.run(newMoveLeft)
+        platiplurLabel.run(newMoveLeft)
+        infoBackdrop.run(newfadeOut, completion: ({
+            self.isOnInfoScreen = false
+        }))
+    }
+    
+    func infoCredits()
+    {
+        isOnInfoScreen = true
+        
+        let newMoveRight = SKAction.moveBy(x: self.frame.width, y: 0, duration: 0.25)
+        let newMoveLeft = SKAction.moveBy(x: self.frame.width * -1, y: 0, duration: 0.25)
+        let newFadeIn = SKAction.fadeAlpha(to: 0.9, duration: 0.25)
+        
+        infoBackdrop.run(newFadeIn)
+        codedLabel.run(newMoveLeft)
+        zukLabel.run(newMoveLeft)
+        musicLabel.run(newMoveRight)
+        hessLabel.run(newMoveRight)
+        producedLabel.run(newMoveRight)
+        platiplurLabel.run(newMoveRight)
+    }
     
     func startHomeOwnersAssociation()
     {
@@ -267,6 +335,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         playLabel.run(playLabel.userData!["UA"] as! SKAction)
         
         score = 0
+        scoreCounterLabel.text = "\(0)"
     }
     
     func gameOver(body: SKPhysicsBody)
@@ -329,6 +398,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         let fadeOut = SKAction.fadeOut(withDuration: 0.25)
         scoreCounterLabel.run(fadeOut)
         
+        let userDefaults = Foundation.UserDefaults.standard
+        let value  = userDefaults.integer(forKey: "SSHighScore")
+        var highScore = score
+        if value < score
+        {
+            scoreTitleLabel.text = "NEW BEST SCORE"
+            userDefaults.set(highScore, forKey: "SSHighScore")
+        }
+        else
+        {
+            scoreTitleLabel.text = "YOU SCORED"
+            highScore = value
+        }
+        saveHighscore()
+        highScoreLabel.text = "\(highScore)"
         scoreTitleLabel.run(moveDown)
         scoreLabel.text = "\(score)"
         scoreLabel.run(moveDown)
@@ -460,6 +544,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         highScoreLabel.position = CGPoint(x: 0, y: highScoreTitleLabel.position.y - highScoreTitleLabel.frame.height/2 - 75)
         highScoreLabel.userData = ["OP":highScoreLabel.position]
         highScoreLabel.fontColor = UIColor(red: 108/255, green: 122/255, blue: 137/255, alpha: 1)
+        
+        platiplurLabel = self.childNode(withName: "platiplurLabel") as! SKLabelNode
+        platiplurLabel.zPosition = 3
+        platiplurLabel.position = CGPoint(x: self.frame.width * -1, y: self.frame.height*(1/8))
+        
+        producedLabel = self.childNode(withName: "producedLabel") as! SKLabelNode
+        producedLabel.position = CGPoint(x: self.frame.width * -1, y: platiplurLabel.position.y + 75)
+        producedLabel.zPosition = 3
+        
+        codedLabel = self.childNode(withName: "codedLabel") as! SKLabelNode
+        codedLabel.position = CGPoint(x: self.frame.width, y: 75/2 + codedLabel.frame.height/2)
+        codedLabel.zPosition = 3
+        
+        zukLabel = self.childNode(withName: "zukLabel") as! SKLabelNode
+        zukLabel.position = CGPoint(x: self.frame.width, y: codedLabel.position.y - 75)
+        zukLabel.zPosition = 3
+        
+        musicLabel = self.childNode(withName: "musicLabel") as! SKLabelNode
+        musicLabel.position = CGPoint(x: self.frame.width * -1, y: self.frame.height * (-1/8))
+        musicLabel.zPosition = 3
+        
+        hessLabel = self.childNode(withName: "hessLabel") as! SKLabelNode
+        hessLabel.position = CGPoint(x: self.frame.width * -1, y: musicLabel.position.y - 75)
+        hessLabel.zPosition = 3
+        
+        infoBackdrop = SKShapeNode.init(rect: self.frame)
+        infoBackdrop.fillColor = SKColor.black
+        infoBackdrop.strokeColor = SKColor.clear
+        infoBackdrop.alpha = 0
+        infoBackdrop.zPosition = 2
+        infoBackdrop.position = CGPoint.zero
+        self.addChild(infoBackdrop)
     }
     
     func slideSliders()
@@ -503,5 +619,51 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             slider.position.x = self.frame.width * (-6/8)
         }
         return slider
+    }
+    
+    //MARK: GAMECENTER METHODS
+    
+    func authPlayer()
+    {
+        let localPlayer = GKLocalPlayer.localPlayer()
+        localPlayer.authenticateHandler = {
+            (view, error) in
+            
+            if view != nil
+            {
+                self.view?.window?.rootViewController?.present(view!, animated: true, completion: nil)
+            }
+            else
+            {
+                print(GKLocalPlayer.localPlayer().isAuthenticated)
+            }
+        }
+    }
+    
+    func saveHighscore(){
+        
+        if GKLocalPlayer.localPlayer().isAuthenticated
+        {
+            let scoreReporter = GKScore(leaderboardIdentifier: "SlideSortScoreLeaderboard")
+            let userDefaults = Foundation.UserDefaults.standard
+            let value  = userDefaults.integer(forKey: "SSHighScore")
+            scoreReporter.value = Int64(value)
+            let scoreArray : [GKScore] = [scoreReporter]
+            GKScore.report(scoreArray, withCompletionHandler: nil)
+        }
+    }
+    
+    func showLeaderBoard(){
+        let viewController = self.view?.window?.rootViewController
+        let gcvc = GKGameCenterViewController()
+        
+        gcvc.gameCenterDelegate = self
+        
+        viewController?.present(gcvc, animated: true, completion: nil)
+    }
+    
+    func gameCenterViewControllerDidFinish(_ gameCenterViewController: GKGameCenterViewController) {
+        gameCenterViewController.dismiss(animated: true, completion: nil)
+        rankIcon.colorBlendFactor = 0
     }
 }
