@@ -144,6 +144,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                         {
                             infoCredits()
                         }
+                        if button == rateIcon
+                        {
+                            rateApp(appId: "id1191366864", completion: { success in
+                                button.colorBlendFactor = 0
+                            })
+                        }
+                        if button == noAdsIcon
+                        {
+                            (self.view?.window?.rootViewController as! GameViewController).purchase(purchase: RegisteredPurchase.NoAds)
+                        }
                     }
                 }
                 if !isButton && isOnMenu
@@ -242,6 +252,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     }
     
     //MARK: CUSTOM METHODS
+    
+    func rateApp(appId: String, completion: @escaping ((_ success: Bool)->())) {
+        guard let url = URL(string : "itms-apps://itunes.apple.com/app/" + appId) else {
+            completion(false)
+            return
+        }
+        guard #available(iOS 10, *) else {
+            completion(UIApplication.shared.openURL(url))
+            return
+        }
+        UIApplication.shared.open(url, options: [:], completionHandler: completion)
+    }
     
     func dismissInfo()
     {
@@ -665,5 +687,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     func gameCenterViewControllerDidFinish(_ gameCenterViewController: GKGameCenterViewController) {
         gameCenterViewController.dismiss(animated: true, completion: nil)
         rankIcon.colorBlendFactor = 0
+        NetworkActivityIndicatorManager.networkOperationFinished()
     }
 }

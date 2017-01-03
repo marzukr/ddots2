@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		25409441406A5C60CFF86AA0 /* Pods_ddots2UITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73DE70E0C28A7003E5FBD21A /* Pods_ddots2UITests.framework */; };
+		32688E02E7A241B6470CADD2 /* Pods_ddots2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6167B0A16AE4AEAD631F6C1C /* Pods_ddots2.framework */; };
+		656F6BCF2170B49F997C6994 /* Pods_ddots2Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7081D5982766AB3EEB39A363 /* Pods_ddots2Tests.framework */; };
 		8617AE101E15A1B400D13B90 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8617AE0F1E15A1B400D13B90 /* AppDelegate.swift */; };
 		8617AE121E15A1B400D13B90 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8617AE111E15A1B400D13B90 /* GameScene.sks */; };
 		8617AE141E15A1B400D13B90 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8617AE131E15A1B400D13B90 /* Actions.sks */; };
@@ -17,8 +20,13 @@
 		8617AE201E15A1B400D13B90 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8617AE1E1E15A1B400D13B90 /* LaunchScreen.storyboard */; };
 		8617AE2B1E15A1B400D13B90 /* ddots2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8617AE2A1E15A1B400D13B90 /* ddots2Tests.swift */; };
 		8617AE361E15A1B400D13B90 /* ddots2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8617AE351E15A1B400D13B90 /* ddots2UITests.swift */; };
+		8628CEBB1E1B8195007B5985 /* SwiftyStoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8628CEBA1E1B8195007B5985 /* SwiftyStoreKit.framework */; };
 		865570C71E172F0C00F2D173 /* dotExplode.sks in Resources */ = {isa = PBXBuildFile; fileRef = 865570C61E172F0C00F2D173 /* dotExplode.sks */; };
+		86703BAC1E1B4F0700CB481D /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86703BAB1E1B4F0700CB481D /* GoogleMobileAds.framework */; };
+		86703BAE1E1B4F3000CB481D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 86703BAD1E1B4F3000CB481D /* GoogleService-Info.plist */; };
 		869C8BA41E1AF1B3005AF369 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869C8BA31E1AF1B3005AF369 /* GameKit.framework */; };
+		86D1967C1E1B718100D5B43A /* NetworkActivityIndicatorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D1967B1E1B718100D5B43A /* NetworkActivityIndicatorManager.swift */; };
+		86D1967E1E1B765C00D5B43A /* ViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D1967D1E1B765C00D5B43A /* ViewControllerExtension.swift */; };
 		86E152EA1E1760080094D0D9 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 86E152E91E1760080094D0D9 /* README.md */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +48,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		30DA5E2E1E80D67E77BA8A83 /* Pods-ddots2Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ddots2Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ddots2Tests/Pods-ddots2Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		37F7B349D431776B1D7FEB75 /* Pods-ddots2UITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ddots2UITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ddots2UITests/Pods-ddots2UITests.debug.xcconfig"; sourceTree = "<group>"; };
+		6167B0A16AE4AEAD631F6C1C /* Pods_ddots2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ddots2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7081D5982766AB3EEB39A363 /* Pods_ddots2Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ddots2Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		715E255F958AD9C87C96618C /* Pods-ddots2Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ddots2Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ddots2Tests/Pods-ddots2Tests.release.xcconfig"; sourceTree = "<group>"; };
+		73DE70E0C28A7003E5FBD21A /* Pods_ddots2UITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ddots2UITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8617AE0C1E15A1B400D13B90 /* ddots2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ddots2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8617AE0F1E15A1B400D13B90 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8617AE111E15A1B400D13B90 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -56,9 +70,17 @@
 		8617AE311E15A1B400D13B90 /* ddots2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ddots2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8617AE351E15A1B400D13B90 /* ddots2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ddots2UITests.swift; sourceTree = "<group>"; };
 		8617AE371E15A1B400D13B90 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8628CEBA1E1B8195007B5985 /* SwiftyStoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyStoreKit.framework; path = "../../Library/Developer/Xcode/DerivedData/ddots2-frgpavknpaeqnlhfqbxnixsjbjdm/Build/Products/Debug-iphoneos/SwiftyStoreKit/SwiftyStoreKit.framework"; sourceTree = "<group>"; };
 		865570C61E172F0C00F2D173 /* dotExplode.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = dotExplode.sks; sourceTree = "<group>"; };
+		86703BAB1E1B4F0700CB481D /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMobileAds.framework; sourceTree = "<group>"; };
+		86703BAD1E1B4F3000CB481D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		869C8BA31E1AF1B3005AF369 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		86D1967B1E1B718100D5B43A /* NetworkActivityIndicatorManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkActivityIndicatorManager.swift; sourceTree = "<group>"; };
+		86D1967D1E1B765C00D5B43A /* ViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerExtension.swift; sourceTree = "<group>"; };
 		86E152E91E1760080094D0D9 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		926E85019767225C458EF742 /* Pods-ddots2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ddots2.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ddots2/Pods-ddots2.debug.xcconfig"; sourceTree = "<group>"; };
+		A4591703B5DD4D5328836D7A /* Pods-ddots2UITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ddots2UITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ddots2UITests/Pods-ddots2UITests.release.xcconfig"; sourceTree = "<group>"; };
+		E74AC11CDD4DF4A8CF91F771 /* Pods-ddots2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ddots2.release.xcconfig"; path = "Pods/Target Support Files/Pods-ddots2/Pods-ddots2.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,7 +88,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8628CEBB1E1B8195007B5985 /* SwiftyStoreKit.framework in Frameworks */,
+				86703BAC1E1B4F0700CB481D /* GoogleMobileAds.framework in Frameworks */,
 				869C8BA41E1AF1B3005AF369 /* GameKit.framework in Frameworks */,
+				32688E02E7A241B6470CADD2 /* Pods_ddots2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +99,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				656F6BCF2170B49F997C6994 /* Pods_ddots2Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +107,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25409441406A5C60CFF86AA0 /* Pods_ddots2UITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,6 +123,7 @@
 				8617AE341E15A1B400D13B90 /* ddots2UITests */,
 				8617AE0D1E15A1B400D13B90 /* Products */,
 				869C8BA21E1AF1B3005AF369 /* Frameworks */,
+				C31D7C87196A9B65F5EF7BCB /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -112,10 +140,14 @@
 		8617AE0E1E15A1B400D13B90 /* ddots2 */ = {
 			isa = PBXGroup;
 			children = (
+				86703BAD1E1B4F3000CB481D /* GoogleService-Info.plist */,
+				86703BAB1E1B4F0700CB481D /* GoogleMobileAds.framework */,
 				8617AE0F1E15A1B400D13B90 /* AppDelegate.swift */,
 				8617AE111E15A1B400D13B90 /* GameScene.sks */,
 				8617AE131E15A1B400D13B90 /* Actions.sks */,
 				8617AE151E15A1B400D13B90 /* GameScene.swift */,
+				86D1967D1E1B765C00D5B43A /* ViewControllerExtension.swift */,
+				86D1967B1E1B718100D5B43A /* NetworkActivityIndicatorManager.swift */,
 				865570C61E172F0C00F2D173 /* dotExplode.sks */,
 				8617AE171E15A1B400D13B90 /* GameViewController.swift */,
 				8617AE191E15A1B400D13B90 /* Main.storyboard */,
@@ -147,9 +179,26 @@
 		869C8BA21E1AF1B3005AF369 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8628CEBA1E1B8195007B5985 /* SwiftyStoreKit.framework */,
 				869C8BA31E1AF1B3005AF369 /* GameKit.framework */,
+				6167B0A16AE4AEAD631F6C1C /* Pods_ddots2.framework */,
+				7081D5982766AB3EEB39A363 /* Pods_ddots2Tests.framework */,
+				73DE70E0C28A7003E5FBD21A /* Pods_ddots2UITests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C31D7C87196A9B65F5EF7BCB /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				926E85019767225C458EF742 /* Pods-ddots2.debug.xcconfig */,
+				E74AC11CDD4DF4A8CF91F771 /* Pods-ddots2.release.xcconfig */,
+				30DA5E2E1E80D67E77BA8A83 /* Pods-ddots2Tests.debug.xcconfig */,
+				715E255F958AD9C87C96618C /* Pods-ddots2Tests.release.xcconfig */,
+				37F7B349D431776B1D7FEB75 /* Pods-ddots2UITests.debug.xcconfig */,
+				A4591703B5DD4D5328836D7A /* Pods-ddots2UITests.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -159,9 +208,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8617AE3A1E15A1B400D13B90 /* Build configuration list for PBXNativeTarget "ddots2" */;
 			buildPhases = (
+				66E450813C08DCDAFD61D154 /* [CP] Check Pods Manifest.lock */,
 				8617AE081E15A1B400D13B90 /* Sources */,
 				8617AE091E15A1B400D13B90 /* Frameworks */,
 				8617AE0A1E15A1B400D13B90 /* Resources */,
+				D076E28C7145FBF2394026CA /* [CP] Embed Pods Frameworks */,
+				62D52380D9CABDEC01352069 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -176,9 +228,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8617AE3D1E15A1B400D13B90 /* Build configuration list for PBXNativeTarget "ddots2Tests" */;
 			buildPhases = (
+				51A7F2E1CA85B44D0F9DCE58 /* [CP] Check Pods Manifest.lock */,
 				8617AE221E15A1B400D13B90 /* Sources */,
 				8617AE231E15A1B400D13B90 /* Frameworks */,
 				8617AE241E15A1B400D13B90 /* Resources */,
+				12E106046E5BBEAA8A39E71F /* [CP] Embed Pods Frameworks */,
+				318AC7F83B3A2BA2943C1E07 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -194,9 +249,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8617AE401E15A1B400D13B90 /* Build configuration list for PBXNativeTarget "ddots2UITests" */;
 			buildPhases = (
+				4EC38EF521C7831195B6D6EF /* [CP] Check Pods Manifest.lock */,
 				8617AE2D1E15A1B400D13B90 /* Sources */,
 				8617AE2E1E15A1B400D13B90 /* Frameworks */,
 				8617AE2F1E15A1B400D13B90 /* Resources */,
+				8DBA2E504F382FFCA340745B /* [CP] Embed Pods Frameworks */,
+				118D84DCCFBCAB37688AF945 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -225,6 +283,9 @@
 						SystemCapabilities = {
 							com.apple.GameCenter = {
 								enabled = 1;
+							};
+							com.apple.InAppPurchase = {
+								enabled = 0;
 							};
 						};
 					};
@@ -273,6 +334,7 @@
 				8617AE201E15A1B400D13B90 /* LaunchScreen.storyboard in Resources */,
 				8617AE141E15A1B400D13B90 /* Actions.sks in Resources */,
 				865570C71E172F0C00F2D173 /* dotExplode.sks in Resources */,
+				86703BAE1E1B4F3000CB481D /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +354,144 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		118D84DCCFBCAB37688AF945 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ddots2UITests/Pods-ddots2UITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		12E106046E5BBEAA8A39E71F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ddots2Tests/Pods-ddots2Tests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		318AC7F83B3A2BA2943C1E07 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ddots2Tests/Pods-ddots2Tests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4EC38EF521C7831195B6D6EF /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		51A7F2E1CA85B44D0F9DCE58 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		62D52380D9CABDEC01352069 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ddots2/Pods-ddots2-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		66E450813C08DCDAFD61D154 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		8DBA2E504F382FFCA340745B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ddots2UITests/Pods-ddots2UITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D076E28C7145FBF2394026CA /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ddots2/Pods-ddots2-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		8617AE081E15A1B400D13B90 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -299,8 +499,10 @@
 			files = (
 				8617AE161E15A1B400D13B90 /* GameScene.swift in Sources */,
 				8617AE181E15A1B400D13B90 /* GameViewController.swift in Sources */,
+				86D1967E1E1B765C00D5B43A /* ViewControllerExtension.swift in Sources */,
 				86E152EA1E1760080094D0D9 /* README.md in Sources */,
 				8617AE101E15A1B400D13B90 /* AppDelegate.swift in Sources */,
+				86D1967C1E1B718100D5B43A /* NetworkActivityIndicatorManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -450,9 +652,15 @@
 		};
 		8617AE3B1E15A1B400D13B90 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 926E85019767225C458EF742 /* Pods-ddots2.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = S6V7RL6ERR;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/ddots2",
+				);
 				INFOPLIST_FILE = ddots2/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.platiplur.ddots2;
@@ -463,9 +671,15 @@
 		};
 		8617AE3C1E15A1B400D13B90 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E74AC11CDD4DF4A8CF91F771 /* Pods-ddots2.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = S6V7RL6ERR;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/ddots2",
+				);
 				INFOPLIST_FILE = ddots2/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.platiplur.ddots2;
@@ -476,8 +690,9 @@
 		};
 		8617AE3E1E15A1B400D13B90 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 30DA5E2E1E80D67E77BA8A83 /* Pods-ddots2Tests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = S6V7RL6ERR;
 				INFOPLIST_FILE = ddots2Tests/Info.plist;
@@ -491,8 +706,9 @@
 		};
 		8617AE3F1E15A1B400D13B90 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 715E255F958AD9C87C96618C /* Pods-ddots2Tests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = S6V7RL6ERR;
 				INFOPLIST_FILE = ddots2Tests/Info.plist;
@@ -506,8 +722,9 @@
 		};
 		8617AE411E15A1B400D13B90 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 37F7B349D431776B1D7FEB75 /* Pods-ddots2UITests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				DEVELOPMENT_TEAM = S6V7RL6ERR;
 				INFOPLIST_FILE = ddots2UITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -520,8 +737,9 @@
 		};
 		8617AE421E15A1B400D13B90 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A4591703B5DD4D5328836D7A /* Pods-ddots2UITests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				DEVELOPMENT_TEAM = S6V7RL6ERR;
 				INFOPLIST_FILE = ddots2UITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

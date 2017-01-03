@@ -9,11 +9,32 @@
 import UIKit
 import SpriteKit
 import GameplayKit
+import GoogleMobileAds
+import SwiftyStoreKit
+import StoreKit
 
-class GameViewController: UIViewController {
+var sharedSecret = "860b2d45c04347dc96c9c9a16bb00bca"
 
+enum RegisteredPurchase : String {
+    case NoAds = "testAd"
+    case autoRenewable = "Auto Renewable"
+}
+
+class GameViewController: UIViewController, GADBannerViewDelegate
+{
+    @IBOutlet var bannerView: GADBannerView!
+    
+    let bundleID = "com.platiplur.ddots2"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let request = GADRequest()
+        request.testDevices = [kGADSimulatorID, "c004ebe3cfdc597aa62f15cf45117e8a"]
+        bannerView.delegate = self
+        bannerView.adUnitID = "ca-app-pub-2589543338977180/4128839558"
+        bannerView.rootViewController = self
+        bannerView.load(request)
         
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
@@ -51,5 +72,114 @@ class GameViewController: UIViewController {
 
     override var prefersStatusBarHidden: Bool {
         return true
+    }
+    
+    //MARK: IAD METHODS
+    
+    func getInfo(purchase: RegisteredPurchase)
+    {
+        NetworkActivityIndicatorManager.NetworkOperationStarted()
+        SwiftyStoreKit.retrieveProductsInfo([bundleID + "." + purchase.rawValue], completion: {
+            result in
+            NetworkActivityIndicatorManager.networkOperationFinished()
+            self.showAlert(alert: self.alertForProductRetrievalInfo(result: result))
+        })
+    }
+    
+    func purchase(purchase: RegisteredPurchase)
+    {
+        NetworkActivityIndicatorManager.NetworkOperationStarted()
+        SwiftyStoreKit.purchaseProduct(bundleID + "." + purchase.rawValue, completion: {
+            result in
+            NetworkActivityIndicatorManager.networkOperationFinished()
+            if case .success(let product) = result
+            {
+                if product.productId == self.bundleID + "." + RegisteredPurchase.NoAds.rawValue
+                {
+                    print("\nTHERE ARE NO LONGER ADS!\n")
+                }
+                
+                if product.needsFinishTransaction
+                {
+                    SwiftyStoreKit.finishTransaction(product.transaction)
+                }
+                self.showAlert(alert: self.alertForPurchaseResult(result: result))
+            }
+        })
+    }
+    
+    func restorePurchases()
+    {
+        NetworkActivityIndicatorManager.NetworkOperationStarted()
+        SwiftyStoreKit.restorePurchases(atomically: true, completion: {
+            result in
+            NetworkActivityIndicatorManager.networkOperationFinished()
+            
+            for product in result.restoredProducts
+            {
+                if product.needsFinishTransaction
+                {
+                    SwiftyStoreKit.finishTransaction(product.transaction)
+                }
+            }
+            
+            self.showAlert(alert: self.alertForRestorePurchases(result: result))
+        })
+    }
+    
+    func verifyReceipt()
+    {
+        NetworkActivityIndicatorManager.NetworkOperationStarted()
+        SwiftyStoreKit.verifyReceipt(password: sharedSecret, completion: {
+            result in
+            NetworkActivityIndicatorManager.networkOperationFinished()
+            
+            self.showAlert(alert: self.alertForVerifyReceipt(result: result))
+            if case .error(let error) = result
+            {
+                if case .noReceiptData = error
+                {
+                    self.refreshReceipt()
+                }
+            }
+        })
+    }
+    
+    func verifyPurchase(product: RegisteredPurchase)
+    {
+        NetworkActivityIndicatorManager.NetworkOperationStarted()
+        SwiftyStoreKit.verifyReceipt(password: sharedSecret, completion: {
+            result in
+            NetworkActivityIndicatorManager.networkOperationFinished()
+            
+            switch result {
+            case .success(let receipt):
+                let productID = self.bundleID + "." + product.rawValue
+                if product == .autoRenewable
+                {
+                    let purchaseResult = SwiftyStoreKit.verifySubscription(productId: productID, inReceipt: receipt, validUntil: Date())
+                    self.showAlert(alert: self.alertForVerifySubscription(result: purchaseResult))
+                }
+                else
+                {
+                    let purchaseResult = SwiftyStoreKit.verifyPurchase(productId: productID, inReceipt: receipt)
+                    self.showAlert(alert: self.alertForVerifyPurchase(result: purchaseResult))
+                }
+            case .error(let error):
+                self.showAlert(alert: self.alertForVerifyReceipt(result: result))
+                if case .noReceiptData = error
+                {
+                    self .refreshReceipt()
+                }
+            }
+        })
+    }
+    
+    func refreshReceipt()
+    {
+        SwiftyStoreKit.refreshReceipt(completion: {
+            result in
+            self.showAlert(alert: self.alertForRefreshReceipt(result: result))
+        })
     }
 }
