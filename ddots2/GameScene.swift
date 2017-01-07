@@ -18,6 +18,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     var scrollSpeed:CGFloat = 2
     let gameScrollSpeed:CGFloat = 12
     let regScrollSpeed:CGFloat = 2
+    let ballSpeed:CGFloat = 1409 / -3
+    
     let redColor = UIColor(red: 242/255, green: 38/255, blue: 19/255, alpha: 1)
     let blueColor = UIColor(red: 25/255, green: 181/255, blue: 254/255, alpha: 1)
     let greenColor = UIColor(red: 46/255, green: 204/255, blue: 113/255, alpha: 1)
@@ -46,8 +48,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     struct PhysicsCategory
     {
         static let none:UInt32 = 0
-        static let ball:UInt32 = 0b01 //1
-        static let bar:UInt32 = 0b10 //2
+        static let ball:UInt32 = 0b001 //1
+        static let bar:UInt32 = 0b010 //2
+        static let edge:UInt32 = 0b100 //4
         static let all:UInt32 = UInt32.max
     }
     
@@ -79,6 +82,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         authPlayer()
         self.scene?.backgroundColor = UIColor(red: 242/255, green: 241/255, blue: 239/255, alpha: 1)
         self.physicsWorld.contactDelegate = self
+        
+//        self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
+//        self.physicsBody?.categoryBitMask = PhysicsCategory.edge
+//        self.physicsBody?.collisionBitMask = PhysicsCategory.ball
+//        self.physicsBody?.contactTestBitMask = PhysicsCategory.none
+//        self.physicsBody?.isDynamic = false
+        
+        setupBounds()
+        
         colors = [redColor,blueColor,greenColor,yellowColor]
         
         moveRight = SKAction.moveBy(x: self.frame.width/2, y: 0, duration: 0.25)
@@ -94,6 +106,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             self.addChild(slider)
             sliders.append(slider)
         }
+        print(self.frame)
     }
     
     override func update(_ currentTime: TimeInterval)
@@ -115,6 +128,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 {
                     dot.removeFromParent()
                     dots.remove(at: index)
+                }
+                else
+                {
+                    dot.physicsBody?.velocity.dy = ballSpeed
                 }
             }
             
@@ -169,6 +186,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                         if button == retryIcon
                         {
                             retry()
+                        }
+                        if button == shareIcon
+                        {
+                            share()
                         }
                     }
                 }
@@ -275,6 +296,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     
     //MARK: CUSTOM METHODS
     
+    func setupBounds()
+    {
+        let set:[[CGPoint]] = [[CGPoint(x: self.frame.maxX, y: self.frame.minY), CGPoint(x: self.frame.maxX, y: self.frame.maxY)], [CGPoint(x: self.frame.minX, y: self.frame.minY), CGPoint(x: self.frame.minX, y: self.frame.maxY)]]
+        for pointSet in set
+        {
+            let rightPath = CGMutablePath()
+            rightPath.move(to: pointSet[0])
+            rightPath.addLine(to: pointSet[1])
+            let rightBound = SKShapeNode(path: rightPath)
+            rightBound.physicsBody = SKPhysicsBody(edgeChainFrom: rightPath)
+            rightBound.physicsBody?.categoryBitMask = PhysicsCategory.edge
+            rightBound.physicsBody?.collisionBitMask = PhysicsCategory.ball
+            rightBound.physicsBody?.contactTestBitMask = PhysicsCategory.none
+            rightBound.physicsBody?.isDynamic = false
+            self.addChild(rightBound)
+        }
+    }
+    
     func updateNoAds()
     {
         let userDefaults = Foundation.UserDefaults.standard
@@ -330,6 +369,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         producedLabel.run(newMoveRight)
         platiplurLabel.run(newMoveRight)
         restorePurchasesLabel.run(newMoveLeft)
+    }
+    
+    func getScreenshot(scene: SKScene) -> UIImage
+    {
+        (self.view?.window?.rootViewController as! GameViewController).bannerView.isHidden = true
+        let bounds = self.scene!.view?.bounds
+        UIGraphicsBeginImageContextWithOptions(bounds!.size, true, UIScreen.main.scale)
+        self.scene?.view?.drawHierarchy(in: bounds!, afterScreenUpdates: true)
+        let screenShot = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        (self.view?.window?.rootViewController as! GameViewController).bannerView.isHidden = false
+        return screenShot!
+    }
+    
+    func share()
+    {
+        let screenShot = getScreenshot(scene: self.scene!)
+        let shareText = "OMG! I just got \(score) points in #SlideSort\nhttp://itunes.apple.com/app/id1191366864"
+        let shareArray:[Any] = [screenShot,shareText]
+        
+        let activityVC = UIActivityViewController(activityItems: shareArray, applicationActivities: nil)
+        (self.view?.window?.rootViewController as! GameViewController).present(activityVC, animated: true, completion: ({
+            self.shareIcon.colorBlendFactor = 0
+        }))
     }
     
     func retry()
@@ -561,10 +624,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         dot.physicsBody = SKPhysicsBody(circleOfRadius: 75/2)
         dot.physicsBody?.affectedByGravity = false
         dot.physicsBody?.categoryBitMask = PhysicsCategory.ball
-        dot.physicsBody?.collisionBitMask = PhysicsCategory.none
+        dot.physicsBody?.collisionBitMask = PhysicsCategory.edge
         dot.physicsBody?.contactTestBitMask = PhysicsCategory.bar
-        let moveDown = SKAction.moveTo(y: -1 * (self.frame.height/2 + dot.frame.height/2), duration: 3)
-        dot.run(moveDown)
+        dot.physicsBody?.velocity = CGVector(dx: 800, dy: ballSpeed)
+        dot.physicsBody?.restitution = 1
+//        let moveDown = SKAction.moveTo(y: -1 * (self.frame.height/2 + dot.frame.height/2), duration: 3)
+//        dot.run(moveDown)
         dots.append(dot)
         self.addChild(dot)
     }
