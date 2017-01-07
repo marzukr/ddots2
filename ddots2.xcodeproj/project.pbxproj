@@ -25,6 +25,7 @@
 		86703BAC1E1B4F0700CB481D /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86703BAB1E1B4F0700CB481D /* GoogleMobileAds.framework */; };
 		86703BAE1E1B4F3000CB481D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 86703BAD1E1B4F3000CB481D /* GoogleService-Info.plist */; };
 		869C8BA41E1AF1B3005AF369 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869C8BA31E1AF1B3005AF369 /* GameKit.framework */; };
+		86CE4F951E21A816008608A7 /* Daniel's song.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 86CE4F941E21A816008608A7 /* Daniel's song.m4a */; };
 		86D1967C1E1B718100D5B43A /* NetworkActivityIndicatorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D1967B1E1B718100D5B43A /* NetworkActivityIndicatorManager.swift */; };
 		86D1967E1E1B765C00D5B43A /* ViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D1967D1E1B765C00D5B43A /* ViewControllerExtension.swift */; };
 		86E152EA1E1760080094D0D9 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 86E152E91E1760080094D0D9 /* README.md */; };
@@ -75,6 +76,8 @@
 		86703BAB1E1B4F0700CB481D /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMobileAds.framework; sourceTree = "<group>"; };
 		86703BAD1E1B4F3000CB481D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		869C8BA31E1AF1B3005AF369 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		86CE4F921E21A7D0008608A7 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		86CE4F941E21A816008608A7 /* Daniel's song.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Daniel's song.m4a"; sourceTree = "<group>"; };
 		86D1967B1E1B718100D5B43A /* NetworkActivityIndicatorManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkActivityIndicatorManager.swift; sourceTree = "<group>"; };
 		86D1967D1E1B765C00D5B43A /* ViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerExtension.swift; sourceTree = "<group>"; };
 		86E152E91E1760080094D0D9 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -154,6 +157,7 @@
 				8617AE1C1E15A1B400D13B90 /* Assets.xcassets */,
 				8617AE1E1E15A1B400D13B90 /* LaunchScreen.storyboard */,
 				8617AE211E15A1B400D13B90 /* Info.plist */,
+				86CE4F941E21A816008608A7 /* Daniel's song.m4a */,
 			);
 			path = ddots2;
 			sourceTree = "<group>";
@@ -179,6 +183,7 @@
 		869C8BA21E1AF1B3005AF369 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				86CE4F921E21A7D0008608A7 /* AVFoundation.framework */,
 				8628CEBA1E1B8195007B5985 /* SwiftyStoreKit.framework */,
 				869C8BA31E1AF1B3005AF369 /* GameKit.framework */,
 				6167B0A16AE4AEAD631F6C1C /* Pods_ddots2.framework */,
@@ -335,6 +340,7 @@
 				8617AE141E15A1B400D13B90 /* Actions.sks in Resources */,
 				865570C71E172F0C00F2D173 /* dotExplode.sks in Resources */,
 				86703BAE1E1B4F3000CB481D /* GoogleService-Info.plist in Resources */,
+				86CE4F951E21A816008608A7 /* Daniel's song.m4a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

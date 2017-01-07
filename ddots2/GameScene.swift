@@ -9,6 +9,7 @@
 import SpriteKit
 import GameplayKit
 import GameKit
+import AVFoundation
 
 var noAdsIcon:SKSpriteNode!
 
@@ -75,6 +76,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     var infoBackdrop:SKShapeNode!
     var restorePurchasesLabel:SKLabelNode!
     
+    var musicAudioPlayer = AVAudioPlayer()
+    
     //MARK: END OF VARIABLES
     
     override func didMove(to view: SKView)
@@ -90,6 +93,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
 //        self.physicsBody?.isDynamic = false
         
         setupBounds()
+        setupAudio()
         
         colors = [redColor,blueColor,greenColor,yellowColor]
         
@@ -295,6 +299,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     }
     
     //MARK: CUSTOM METHODS
+    
+    func setupAudio()
+    {
+        do
+        {
+            musicAudioPlayer = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "Daniel's song", ofType: "m4a")!))
+            musicAudioPlayer.numberOfLoops = -1
+            musicAudioPlayer.prepareToPlay()
+            musicAudioPlayer.play()
+        }
+        catch
+        {
+            print(error)
+        }
+    }
     
     func setupBounds()
     {
