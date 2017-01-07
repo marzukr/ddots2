@@ -29,12 +29,31 @@ class GameViewController: UIViewController, GADBannerViewDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        SwiftyStoreKit.completeTransactions(atomically: true) { products in
+            
+            for product in products {
+                
+                if product.transaction.transactionState == .purchased || product.transaction.transactionState == .restored {
+                    
+                    if product.needsFinishTransaction {
+                        SwiftyStoreKit.finishTransaction(product.transaction)
+                    }
+                    print("purchased: \(product)")
+                }
+            }
+        }
+        
+        let userDefaults = Foundation.UserDefaults.standard
+        print("HOLA" + "\(userDefaults.bool(forKey: "didPurchaseNoAds"))")
+        
         let request = GADRequest()
         request.testDevices = [kGADSimulatorID, "c004ebe3cfdc597aa62f15cf45117e8a"]
         bannerView.delegate = self
         bannerView.adUnitID = "ca-app-pub-2589543338977180/4128839558"
         bannerView.rootViewController = self
         bannerView.load(request)
+        
+        updateNoAds()
         
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
@@ -74,6 +93,22 @@ class GameViewController: UIViewController, GADBannerViewDelegate
         return true
     }
     
+    func updateNoAds()
+    {
+        let userDefaults = Foundation.UserDefaults.standard
+        bannerView.isHidden = userDefaults.bool(forKey: "didPurchaseNoAds")
+    }
+    
+    func updateNoAdsLabel()
+    {
+        let userDefaults = Foundation.UserDefaults.standard
+        if userDefaults.bool(forKey: "didPurchaseNoAds") == true
+        {
+            let texture = SKTexture(image: UIImage(named: "noAdsPurchasedIcon")!)
+            noAdsIcon.texture = texture
+        }
+    }
+    
     //MARK: IAD METHODS
     
     func getInfo(purchase: RegisteredPurchase)
@@ -96,7 +131,10 @@ class GameViewController: UIViewController, GADBannerViewDelegate
             {
                 if product.productId == self.bundleID + "." + RegisteredPurchase.NoAds.rawValue
                 {
-                    print("\nTHERE ARE NO LONGER ADS!\n")
+                    let userDefaults = Foundation.UserDefaults.standard
+                    userDefaults.set(true, forKey: "didPurchaseNoAds")
+                    self.updateNoAds()
+                    self.updateNoAdsLabel()
                 }
                 
                 if product.needsFinishTransaction
@@ -108,7 +146,7 @@ class GameViewController: UIViewController, GADBannerViewDelegate
         })
     }
     
-    func restorePurchases()
+    func restorePurchases(label: SKLabelNode)
     {
         NetworkActivityIndicatorManager.NetworkOperationStarted()
         SwiftyStoreKit.restorePurchases(atomically: true, completion: {
@@ -124,6 +162,7 @@ class GameViewController: UIViewController, GADBannerViewDelegate
             }
             
             self.showAlert(alert: self.alertForRestorePurchases(result: result))
+            label.colorBlendFactor = 0
         })
     }
     

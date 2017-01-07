@@ -10,6 +10,8 @@ import SpriteKit
 import GameplayKit
 import GameKit
 
+var noAdsIcon:SKSpriteNode!
+
 class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelegate
 {
     var sliders:[SKShapeNode]! = []
@@ -25,7 +27,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     var titleLabel:SKLabelNode!
     var playLabel:SKLabelNode!
     
-    var noAdsIcon:SKSpriteNode!
+//    var noAdsIcon:SKSpriteNode!
     var infoIcon:SKSpriteNode!
     var rateIcon:SKSpriteNode!
     var rankIcon:SKSpriteNode!
@@ -64,6 +66,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     var musicLabel:SKLabelNode!
     var hessLabel:SKLabelNode!
     var infoBackdrop:SKShapeNode!
+    var restorePurchasesLabel:SKLabelNode!
     
     //MARK: END OF VARIABLES
     
@@ -130,7 +133,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 {
                     if button.contains(location)
                     {
-                        button.colorBlendFactor = 0.5
+                        let userDefaults = Foundation.UserDefaults.standard
+                        if !(button == noAdsIcon && userDefaults.bool(forKey: "didPurchaseNoAds") == true)
+                        {
+                            button.colorBlendFactor = 0.5
+                        }
                         isButton = true
                         if button == homeIcon
                         {
@@ -150,9 +157,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                                 button.colorBlendFactor = 0
                             })
                         }
-                        if button == noAdsIcon
+                        if button == noAdsIcon && userDefaults.bool(forKey: "didPurchaseNoAds") == false
                         {
                             (self.view?.window?.rootViewController as! GameViewController).purchase(purchase: RegisteredPurchase.NoAds)
+//                            (self.view?.window?.rootViewController as! GameViewController).restorePurchases()
                         }
                     }
                 }
@@ -161,7 +169,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     playLabel.removeAllActions()
                     let disappear = SKAction.fadeAlpha(to: 0, duration: 0.25)
                     noAdsIcon.run(moveRight, completion: ({
-                        self.noAdsIcon.isHidden = true
+                        noAdsIcon.isHidden = true
                     }))
                     infoIcon.run(moveRight, completion: ({
                         self.infoIcon.isHidden = true
@@ -194,6 +202,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     UIApplication.shared.open(url as! URL, options: [:], completionHandler: { (success) in
                         self.platiplurLabel.colorBlendFactor = 0
                     })
+                }
+                else if restorePurchasesLabel.contains(location)
+                {
+                    restorePurchasesLabel.colorBlendFactor = 0.5
+                    restorePurchasesLabel.color = UIColor.black
+                    (self.view?.window?.rootViewController as! GameViewController).restorePurchases(label: restorePurchasesLabel)
                 }
                 else
                 {
@@ -253,6 +267,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     
     //MARK: CUSTOM METHODS
     
+    func updateNoAds()
+    {
+        let userDefaults = Foundation.UserDefaults.standard
+        if userDefaults.bool(forKey: "didPurchaseNoAds") == true
+        {
+            let texture = SKTexture(image: UIImage(named: "noAdsPurchasedIcon")!)
+            noAdsIcon.texture = texture
+        }
+    }
+    
     func rateApp(appId: String, completion: @escaping ((_ success: Bool)->())) {
         guard let url = URL(string : "itms-apps://itunes.apple.com/app/" + appId) else {
             completion(false)
@@ -276,6 +300,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         hessLabel.run(newMoveLeft)
         producedLabel.run(newMoveLeft)
         platiplurLabel.run(newMoveLeft)
+        restorePurchasesLabel.run(newMoveRight)
         infoBackdrop.run(newfadeOut, completion: ({
             self.isOnInfoScreen = false
         }))
@@ -296,6 +321,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         hessLabel.run(newMoveRight)
         producedLabel.run(newMoveRight)
         platiplurLabel.run(newMoveRight)
+        restorePurchasesLabel.run(newMoveLeft)
     }
     
     func startHomeOwnersAssociation()
@@ -332,7 +358,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         
         infoIcon.run(newMoveRight)
         fakeNoAds.run(newMoveRight, completion: ({
-            self.noAdsIcon.position = fakeNoAds.position
+            noAdsIcon.position = fakeNoAds.position
             fakeNoAds.removeFromParent()
         }))
         fakeRate.run(newMoveRight, completion: ({
@@ -520,6 +546,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         
         noAdsIcon = self.childNode(withName: "noAdsIcon") as! SKSpriteNode
         noAdsIcon.position = CGPoint(x: 25 + 50, y: 0)
+        updateNoAds()
         
         infoIcon = self.childNode(withName: "infoIcon") as! SKSpriteNode
         infoIcon.position = CGPoint(x: noAdsIcon.position.x + 150, y: 0)
@@ -590,6 +617,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         hessLabel = self.childNode(withName: "hessLabel") as! SKLabelNode
         hessLabel.position = CGPoint(x: self.frame.width * -1, y: musicLabel.position.y - 75)
         hessLabel.zPosition = 3
+        
+        restorePurchasesLabel = self.childNode(withName: "restorePurchasesLabel") as! SKLabelNode
+        restorePurchasesLabel.position = CGPoint(x: self.frame.width, y: self.frame.height/8 * -1 * 3)
+        restorePurchasesLabel.zPosition = 3
         
         infoBackdrop = SKShapeNode.init(rect: self.frame)
         infoBackdrop.fillColor = SKColor.black
