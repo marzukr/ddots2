@@ -16,6 +16,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
 {
     var sliders:[SKShapeNode]! = []
     var scrollSpeed:CGFloat = 2
+    let gameScrollSpeed:CGFloat = 12
+    let regScrollSpeed:CGFloat = 2
     let redColor = UIColor(red: 242/255, green: 38/255, blue: 19/255, alpha: 1)
     let blueColor = UIColor(red: 25/255, green: 181/255, blue: 254/255, alpha: 1)
     let greenColor = UIColor(red: 46/255, green: 204/255, blue: 113/255, alpha: 1)
@@ -32,6 +34,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     var rateIcon:SKSpriteNode!
     var rankIcon:SKSpriteNode!
     var homeIcon:SKSpriteNode!
+    var shareIcon:SKSpriteNode!
+    var retryIcon:SKSpriteNode!
     var buttons:[SKSpriteNode]! = []
     
     var isOnMenu:Bool = true
@@ -162,6 +166,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                             (self.view?.window?.rootViewController as! GameViewController).purchase(purchase: RegisteredPurchase.NoAds)
 //                            (self.view?.window?.rootViewController as! GameViewController).restorePurchases()
                         }
+                        if button == retryIcon
+                        {
+                            retry()
+                        }
                     }
                 }
                 if !isButton && isOnMenu
@@ -188,7 +196,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     }))
                     let fadeIn = SKAction.fadeIn(withDuration: 0.25)
                     scoreCounterLabel.run(fadeIn)
-                    scrollSpeed = 12
+                    scrollSpeed = gameScrollSpeed
                     isOnMenu = false
                 }
             }
@@ -324,6 +332,33 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         restorePurchasesLabel.run(newMoveLeft)
     }
     
+    func retry()
+    {
+        homeIcon.run(moveLeft)
+        rankIcon.run(moveLeft, completion: ({
+            self.rankIcon.position.x -= 150
+        }))
+        rateIcon.run(moveRight, completion: ({
+            self.rateIcon.position.x = self.rankIcon.position.x + 150
+        }))
+        noAdsIcon.run(moveRight, completion: ({
+            noAdsIcon.position.x -= 150
+            self.retryIcon.colorBlendFactor = 0
+        }))
+        scoreTitleLabel.run(moveUp)
+        scoreLabel.run(moveUp)
+        highScoreTitleLabel.run(moveUp)
+        highScoreLabel.run(moveUp)
+        retryIcon.run(moveLeft)
+        shareIcon.run(moveRight)
+        score = 0
+        scoreCounterLabel.text = "\(0)"
+        let fadeIn = SKAction.fadeIn(withDuration: 0.25)
+        scoreCounterLabel.run(fadeIn)
+        scrollSpeed = gameScrollSpeed
+        isOnGameOver = false
+    }
+    
     func startHomeOwnersAssociation()
     {
         infoIcon.position = CGPoint(x: noAdsIcon.position.x - self.frame.width, y: 0)
@@ -382,6 +417,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         playLabel.run(newMoveRight)
         playLabel.run(playLabel.userData!["UA"] as! SKAction)
         
+        shareIcon.run(moveRight)
+        retryIcon.run(newMoveRight, completion: ({
+            self.retryIcon.position = self.retryIcon.userData!["OP"] as! CGPoint
+        }))
+        
         score = 0
         scoreCounterLabel.text = "\(0)"
     }
@@ -393,7 +433,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             if ball.physicsBody == body && !isOnGameOver
             {
                 isOnGameOver = true
-                scrollSpeed = 2
+                scrollSpeed = regScrollSpeed
                 ball.removeAllActions()
                 let shrinkAction = SKAction.scale(to: 0, duration: 0.1)
                 let explosion = SKEmitterNode(fileNamed: "dotExplode.sks")!
@@ -442,6 +482,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         rateIcon.run(moveLeft)
         noAdsIcon.position = infoIcon.position
         noAdsIcon.run(moveLeft)
+        retryIcon.run(moveRight)
+        shareIcon.run(moveLeft)
         
         let fadeOut = SKAction.fadeOut(withDuration: 0.25)
         scoreCounterLabel.run(fadeOut)
@@ -561,7 +603,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         homeIcon.position = CGPoint(x: rankIcon.position.x - self.frame.width/2, y: 0)
         homeIcon.isHidden = true
         
-        buttons = [noAdsIcon, infoIcon, rateIcon, rankIcon, homeIcon]
+        shareIcon = self.childNode(withName: "shareIcon") as! SKSpriteNode
+        shareIcon.position = CGPoint(x: 75 + self.frame.width/2, y: -150)
+        
+        retryIcon = self.childNode(withName: "retryIcon") as! SKSpriteNode
+        retryIcon.position = CGPoint(x: -75 - self.frame.width/2, y: shareIcon.position.y)
+        retryIcon.userData = ["OP":retryIcon.position]
+        
+        buttons = [noAdsIcon, infoIcon, rateIcon, rankIcon, homeIcon, shareIcon, retryIcon]
         
         for button in buttons
         {
