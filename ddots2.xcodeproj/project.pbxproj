@@ -24,6 +24,10 @@
 		86703BAC1E1B4F0700CB481D /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86703BAB1E1B4F0700CB481D /* GoogleMobileAds.framework */; };
 		86703BAE1E1B4F3000CB481D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 86703BAD1E1B4F3000CB481D /* GoogleService-Info.plist */; };
 		8676176D1E21D67B0099A160 /* DeviceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8676176C1E21D67B0099A160 /* DeviceKit.framework */; };
+		867617731E22E3F10099A160 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8676176F1E22E3F10099A160 /* LICENSE.txt */; };
+		867617741E22E3F10099A160 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 867617701E22E3F10099A160 /* Roboto-Light.ttf */; };
+		867617751E22E3F10099A160 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 867617711E22E3F10099A160 /* Roboto-Medium.ttf */; };
+		867617761E22E3F10099A160 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 867617721E22E3F10099A160 /* Roboto-Regular.ttf */; };
 		869C8BA41E1AF1B3005AF369 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869C8BA31E1AF1B3005AF369 /* GameKit.framework */; };
 		86CE4F951E21A816008608A7 /* Daniel's song.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 86CE4F941E21A816008608A7 /* Daniel's song.m4a */; };
 		86CE4F9B1E21BDF4008608A7 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 86CE4F9A1E21BDF4008608A7 /* Launch Screen.storyboard */; };
@@ -76,6 +80,10 @@
 		86703BAB1E1B4F0700CB481D /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMobileAds.framework; sourceTree = "<group>"; };
 		86703BAD1E1B4F3000CB481D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8676176C1E21D67B0099A160 /* DeviceKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceKit.framework; path = "../../../Library/Developer/Xcode/DerivedData/ddots2-aisezcmcuvusnacyjiajkdluuiut/Build/Products/Debug-iphonesimulator/DeviceKit/DeviceKit.framework"; sourceTree = "<group>"; };
+		8676176F1E22E3F10099A160 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		867617701E22E3F10099A160 /* Roboto-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Light.ttf"; sourceTree = "<group>"; };
+		867617711E22E3F10099A160 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
+		867617721E22E3F10099A160 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		869C8BA31E1AF1B3005AF369 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		86CE4F921E21A7D0008608A7 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		86CE4F941E21A816008608A7 /* Daniel's song.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Daniel's song.m4a"; sourceTree = "<group>"; };
@@ -161,6 +169,7 @@
 				8617AE1C1E15A1B400D13B90 /* Assets.xcassets */,
 				8617AE211E15A1B400D13B90 /* Info.plist */,
 				86CE4F941E21A816008608A7 /* Daniel's song.m4a */,
+				8676176E1E22E3F10099A160 /* Roboto */,
 			);
 			path = ddots2;
 			sourceTree = "<group>";
@@ -181,6 +190,17 @@
 				8617AE371E15A1B400D13B90 /* Info.plist */,
 			);
 			path = ddots2UITests;
+			sourceTree = "<group>";
+		};
+		8676176E1E22E3F10099A160 /* Roboto */ = {
+			isa = PBXGroup;
+			children = (
+				8676176F1E22E3F10099A160 /* LICENSE.txt */,
+				867617701E22E3F10099A160 /* Roboto-Light.ttf */,
+				867617711E22E3F10099A160 /* Roboto-Medium.ttf */,
+				867617721E22E3F10099A160 /* Roboto-Regular.ttf */,
+			);
+			path = Roboto;
 			sourceTree = "<group>";
 		};
 		869C8BA21E1AF1B3005AF369 /* Frameworks */ = {
@@ -339,10 +359,14 @@
 			files = (
 				8617AE1B1E15A1B400D13B90 /* Main.storyboard in Resources */,
 				8617AE121E15A1B400D13B90 /* GameScene.sks in Resources */,
+				867617741E22E3F10099A160 /* Roboto-Light.ttf in Resources */,
 				86CE4F9B1E21BDF4008608A7 /* Launch Screen.storyboard in Resources */,
+				867617731E22E3F10099A160 /* LICENSE.txt in Resources */,
 				8617AE1D1E15A1B400D13B90 /* Assets.xcassets in Resources */,
+				867617761E22E3F10099A160 /* Roboto-Regular.ttf in Resources */,
 				8617AE141E15A1B400D13B90 /* Actions.sks in Resources */,
 				865570C71E172F0C00F2D173 /* dotExplode.sks in Resources */,
+				867617751E22E3F10099A160 /* Roboto-Medium.ttf in Resources */,
 				86703BAE1E1B4F3000CB481D /* GoogleService-Info.plist in Resources */,
 				86CE4F951E21A816008608A7 /* Daniel's song.m4a in Resources */,
 			);
@@ -658,7 +682,6 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = S6V7RL6ERR;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -679,7 +702,6 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = S6V7RL6ERR;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

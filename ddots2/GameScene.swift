@@ -262,7 +262,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         {
             for button in buttons
             {
-                button.colorBlendFactor = 0
+                if button != noAdsIcon
+                {
+                    button.colorBlendFactor = 0
+                }
             }
         }
         else
@@ -413,6 +416,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         let shareArray:[Any] = [screenShot,shareText]
         
         let activityVC = UIActivityViewController(activityItems: shareArray, applicationActivities: nil)
+        let device = Device()
+        if device.isPad && activityVC.responds(to: #selector(getter: UIViewController.popoverPresentationController))
+        {
+            activityVC.popoverPresentationController?.sourceView = self.view
+            activityVC.popoverPresentationController?.sourceRect = CGRect(x: self.frame.size.width/2 + self.shareIcon.position.x, y: self.frame.size.height/2, width: 0, height: 0)
+        }
+        if device == .iPadPro12Inch || device == Device.simulator(.iPadPro12Inch)
+        {
+            activityVC.popoverPresentationController?.sourceRect = CGRect(x: self.frame.size.width/2 + self.shareIcon.frame.width*2 + self.shareIcon.position.x/2, y: self.frame.size.height/2 - self.shareIcon.position.y, width: 0, height: 0)
+        }
+        
         (self.view?.window?.rootViewController as! GameViewController).present(activityVC, animated: true, completion: ({
             self.shareIcon.colorBlendFactor = 0
         }))
@@ -663,6 +677,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     
     func setupMenuLabels()
     {
+        let device = Device()
+        
         titleLabel = self.childNode(withName: "titleLabel") as! SKLabelNode
         titleLabel.position = CGPoint(x: 0, y: self.frame.height/4)
         titleLabel.fontColor = UIColor(red: 108/255, green: 122/255, blue: 137/255, alpha: 1)
@@ -711,6 +727,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         
         scoreCounterLabel = self.childNode(withName: "scoreCounterLabel") as! SKLabelNode
         scoreCounterLabel.position = CGPoint(x: self.frame.maxX - 50, y: self.frame.maxY - 50)
+        if device.isPad
+        {
+            scoreCounterLabel.position = CGPoint(x: self.frame.maxX - 50, y: self.frame.maxY - 200)
+        }
         scoreCounterLabel.fontColor = UIColor(red: 191/255, green: 191/255, blue: 191/255, alpha: 1)
         scoreCounterLabel.zPosition = 5
         scoreCounterLabel.alpha = 0
@@ -734,6 +754,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         highScoreLabel.position = CGPoint(x: 0, y: highScoreTitleLabel.position.y - highScoreTitleLabel.frame.height/2 - 75)
         highScoreLabel.userData = ["OP":highScoreLabel.position]
         highScoreLabel.fontColor = UIColor(red: 108/255, green: 122/255, blue: 137/255, alpha: 1)
+        
+        if device.isPad
+        {
+            let scoreLabels:[SKLabelNode] = [scoreTitleLabel, scoreLabel, highScoreTitleLabel, highScoreLabel]
+            for scoreLabelo in scoreLabels
+            {
+                scoreLabelo.position.y -= 75
+                scoreLabelo.userData!["OP"] = scoreLabelo.position
+            }
+        }
         
         platiplurLabel = self.childNode(withName: "platiplurLabel") as! SKLabelNode
         platiplurLabel.zPosition = 3
@@ -761,6 +791,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         
         restorePurchasesLabel = self.childNode(withName: "restorePurchasesLabel") as! SKLabelNode
         restorePurchasesLabel.position = CGPoint(x: self.frame.width, y: self.frame.height/8 * -1 * 3)
+        if device.isPad
+        {
+            restorePurchasesLabel.position = CGPoint(x: self.frame.width, y: self.frame.height/8 * -1 * 2.5)
+        }
         restorePurchasesLabel.zPosition = 3
         
         infoBackdrop = SKShapeNode.init(rect: self.frame)

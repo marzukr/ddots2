@@ -47,7 +47,7 @@ class GameViewController: UIViewController, GADBannerViewDelegate
         print("HOLA" + "\(userDefaults.bool(forKey: "didPurchaseNoAds"))")
         
         let request = GADRequest()
-        request.testDevices = [kGADSimulatorID, "c004ebe3cfdc597aa62f15cf45117e8a"]
+        request.testDevices = [kGADSimulatorID, "c004ebe3cfdc597aa62f15cf45117e8a", "de9a8891b5b6ab4f3c3ee561bbcc8e08"]
         bannerView.delegate = self
         bannerView.adUnitID = "ca-app-pub-2589543338977180/4128839558"
         bannerView.rootViewController = self
@@ -77,11 +77,12 @@ class GameViewController: UIViewController, GADBannerViewDelegate
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            return .allButUpsideDown
-        } else {
-            return .all
-        }
+        return UIInterfaceOrientationMask.portrait
+    }
+    
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation
+    {
+        return UIInterfaceOrientation.portrait
     }
 
     override func didReceiveMemoryWarning() {
@@ -143,6 +144,7 @@ class GameViewController: UIViewController, GADBannerViewDelegate
                 }
                 self.showAlert(alert: self.alertForPurchaseResult(result: result))
             }
+            noAdsIcon.colorBlendFactor = 0
         })
     }
     
