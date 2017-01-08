@@ -277,11 +277,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             {
                 score = score + (contact.bodyA.node?.userData!["Score"] as! Int)
                 contact.bodyA.node?.userData?.setValue(0, forKey: "Score")
+                contact.bodyA.node?.physicsBody?.velocity.dx = 0
             }
             else
             {
                 score = score + (contact.bodyB.node?.userData!["Score"] as! Int)
                 contact.bodyB.node?.userData?.setValue(0, forKey: "Score")
+                contact.bodyB.node?.physicsBody?.velocity.dx = 0
             }
             scoreCounterLabel.text = "\(score)"
         }
