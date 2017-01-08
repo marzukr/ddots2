@@ -10,6 +10,7 @@ import SpriteKit
 import GameplayKit
 import GameKit
 import AVFoundation
+import DeviceKit
 
 var noAdsIcon:SKSpriteNode!
 
@@ -110,7 +111,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             self.addChild(slider)
             sliders.append(slider)
         }
-        print(self.frame)
+//        let device = Device()
+//        print(device)
     }
     
     override func update(_ currentTime: TimeInterval)
@@ -545,7 +547,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 whiteFlash.run(fadeWhiteFlash, completion: ({
                     whiteFlash.removeFromParent()
                 }))
-                shake(times: 50)
+                let device = Device()
+                if device != .iPhone5 && device != .iPhone5c && device != .simulator(.iPhone5)
+                {
+                    shake(times: 50)
+                }
                 
                 gameOverMenuIcons()
             }

@@ -1,12 +1,15 @@
 PODS:
+  - DeviceKit (1.0.0)
   - SwiftyStoreKit (0.6.1)
 
 DEPENDENCIES:
+  - DeviceKit (~> 1.0)
   - SwiftyStoreKit
 
 SPEC CHECKSUMS:
+  DeviceKit: ddead7f3a7c9603ba3a63cb748566428c38dd11f
   SwiftyStoreKit: 956408606f43ec3df3386b56e65615bb19bee85e
 
-PODFILE CHECKSUM: 7017f9d8e72fd15f0ac70ec6b903bd8f50726886
+PODFILE CHECKSUM: 9c5b576638741e76b74217cb3c7be0bad9d4cf87
 
 COCOAPODS: 1.1.1

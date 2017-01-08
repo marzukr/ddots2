@@ -6,6 +6,7 @@ target 'ddots2' do
   use_frameworks!
 
   pod 'SwiftyStoreKit'
+  pod 'DeviceKit', '~> 1.0'
 
   target 'ddots2Tests' do
     inherit! :search_paths
