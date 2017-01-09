@@ -98,7 +98,8 @@ class GameViewController: UIViewController, GADBannerViewDelegate
     
     func presentFullScreenAd()
     {
-        if bigAd.isReady && !isGeimerBetaVersion
+        let userDefaults = Foundation.UserDefaults.standard
+        if bigAd.isReady && !isGeimerBetaVersion && userDefaults.bool(forKey: "didPurchaseNoAds") == false
         {
             bigAd.present(fromRootViewController: self)
             bigAd = self.createAd()

@@ -78,7 +78,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     var infoBackdrop:SKShapeNode!
     var restorePurchasesLabel:SKLabelNode!
     
-    var musicAudioPlayer = AVAudioPlayer()
+    var musicAudioPlayer:AVAudioPlayer!
+    var effectAudioPlayer:AVAudioPlayer!
     
     //MARK: END OF VARIABLES
     
@@ -88,11 +89,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         self.scene?.backgroundColor = UIColor(red: 242/255, green: 241/255, blue: 239/255, alpha: 1)
         self.physicsWorld.contactDelegate = self
         
-//        self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
-//        self.physicsBody?.categoryBitMask = PhysicsCategory.edge
-//        self.physicsBody?.collisionBitMask = PhysicsCategory.ball
-//        self.physicsBody?.contactTestBitMask = PhysicsCategory.none
-//        self.physicsBody?.isDynamic = false
+        musicAudioPlayer = AVAudioPlayer()
+        effectAudioPlayer = AVAudioPlayer()
         
         setupBounds()
         setupAudio()
@@ -163,6 +161,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     if button.contains(location)
                     {
                         let userDefaults = Foundation.UserDefaults.standard
+                        playButtonAudio()
                         if !(button == noAdsIcon && userDefaults.bool(forKey: "didPurchaseNoAds") == true)
                         {
                             button.colorBlendFactor = 0.5
@@ -203,6 +202,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 }
                 if !isButton && isOnMenu
                 {
+                    playButtonAudio()
                     playLabel.removeAllActions()
                     let disappear = SKAction.fadeAlpha(to: 0, duration: 0.25)
                     noAdsIcon.run(moveRight, completion: ({
@@ -233,6 +233,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             {
                 if platiplurLabel.contains(location)
                 {
+                    playButtonAudio()
                     platiplurLabel.colorBlendFactor = 0.5
                     platiplurLabel.color = UIColor.black
                     let url = NSURL(string: "https://platiplur.com")
@@ -242,12 +243,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 }
                 else if restorePurchasesLabel.contains(location)
                 {
+                    playButtonAudio()
                     restorePurchasesLabel.colorBlendFactor = 0.5
                     restorePurchasesLabel.color = UIColor.black
                     (self.view?.window?.rootViewController as! GameViewController).restorePurchases(label: restorePurchasesLabel)
                 }
                 else
                 {
+                    playButtonAudio()
                     dismissInfo()
                 }
             }
@@ -340,10 +343,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     {
         do
         {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryAmbient)
+            try AVAudioSession.sharedInstance().setActive(true)
             musicAudioPlayer = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "Daniel's song", ofType: "m4a")!))
             musicAudioPlayer.numberOfLoops = -1
             musicAudioPlayer.prepareToPlay()
             musicAudioPlayer.play()
+        }
+        catch
+        {
+            print(error)
+        }
+    }
+    
+    func playButtonAudio()
+    {
+        do
+        {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryAmbient)
+            try AVAudioSession.sharedInstance().setActive(true)
+            effectAudioPlayer = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "ClickSound", ofType: "m4a")!))
+            effectAudioPlayer.prepareToPlay()
+            effectAudioPlayer.play()
         }
         catch
         {

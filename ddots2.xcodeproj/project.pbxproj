@@ -39,6 +39,7 @@
 		869A52631E23302B00420882 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869A52621E23302B00420882 /* MessageUI.framework */; };
 		869A52651E23303600420882 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869A52641E23303600420882 /* StoreKit.framework */; };
 		869A52671E23304000420882 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869A52661E23304000420882 /* SystemConfiguration.framework */; };
+		869A52691E233E7300420882 /* ClickSound.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 869A52681E233E7300420882 /* ClickSound.m4a */; };
 		869C8BA41E1AF1B3005AF369 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869C8BA31E1AF1B3005AF369 /* GameKit.framework */; };
 		86CE4F951E21A816008608A7 /* Daniel's song.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 86CE4F941E21A816008608A7 /* Daniel's song.m4a */; };
 		86CE4F9B1E21BDF4008608A7 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 86CE4F9A1E21BDF4008608A7 /* Launch Screen.storyboard */; };
@@ -105,6 +106,7 @@
 		869A52621E23302B00420882 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		869A52641E23303600420882 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		869A52661E23304000420882 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		869A52681E233E7300420882 /* ClickSound.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ClickSound.m4a; sourceTree = "<group>"; };
 		869C8BA31E1AF1B3005AF369 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		86CE4F921E21A7D0008608A7 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		86CE4F941E21A816008608A7 /* Daniel's song.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Daniel's song.m4a"; sourceTree = "<group>"; };
@@ -201,6 +203,7 @@
 				8617AE1C1E15A1B400D13B90 /* Assets.xcassets */,
 				8617AE211E15A1B400D13B90 /* Info.plist */,
 				86CE4F941E21A816008608A7 /* Daniel's song.m4a */,
+				869A52681E233E7300420882 /* ClickSound.m4a */,
 				8676176E1E22E3F10099A160 /* Roboto */,
 			);
 			path = ddots2;
@@ -411,6 +414,7 @@
 				865570C71E172F0C00F2D173 /* dotExplode.sks in Resources */,
 				867617751E22E3F10099A160 /* Roboto-Medium.ttf in Resources */,
 				86CE4F951E21A816008608A7 /* Daniel's song.m4a in Resources */,
+				869A52691E233E7300420882 /* ClickSound.m4a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
