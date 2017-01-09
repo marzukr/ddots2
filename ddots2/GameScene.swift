@@ -695,7 +695,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         dot.physicsBody?.categoryBitMask = PhysicsCategory.ball
         dot.physicsBody?.collisionBitMask = PhysicsCategory.edge
         dot.physicsBody?.contactTestBitMask = PhysicsCategory.bar
-        dot.physicsBody?.velocity = CGVector(dx: 800, dy: ballSpeed)
+        let randomDir = arc4random_uniform(2)
+        var dx:CGFloat = 800
+        if randomDir == 0
+        {
+            dx = -800
+        }
+        dot.physicsBody?.velocity = CGVector(dx: dx, dy: ballSpeed)
         dot.physicsBody?.restitution = 1
 //        let moveDown = SKAction.moveTo(y: -1 * (self.frame.height/2 + dot.frame.height/2), duration: 3)
 //        dot.run(moveDown)
