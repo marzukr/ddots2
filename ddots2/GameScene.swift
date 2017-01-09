@@ -123,7 +123,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         }
         else
         {
-            if isTouchingScreen && !isOnGameOver
+//            if isTouchingScreen && !isOnGameOver
+            if !isOnGameOver
             {
                 slideSliders()
             }
@@ -252,6 +253,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             else
             {
                 isTouchingScreen = true
+                if location.x > self.frame.midX
+                {
+                    scrollSpeed = gameScrollSpeed
+                }
+                else
+                {
+                    scrollSpeed = gameScrollSpeed * -1
+                }
+            }
+        }
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        for touch in touches
+        {
+            let location = touch.location(in: self)
+            if !isOnMenu && !isOnGameOver
+            {
+                if location.x > self.frame.midX
+                {
+                    scrollSpeed = gameScrollSpeed
+                }
+                else
+                {
+                    scrollSpeed = gameScrollSpeed * -1
+                }
             }
         }
     }
@@ -271,6 +298,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         else
         {
             isTouchingScreen = false
+            scrollSpeed = 0
         }
     }
     
@@ -810,9 +838,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     {
         for node in sliders
         {
-            node.position.x += self.scrollSpeed
+//            node.position.x += self.scrollSpeed
+            if (node.userData!["SS"]! as! CGFloat) != scrollSpeed
+            {
+                node.removeAllActions()
+            }
+            if node.hasActions() == false
+            {
+                let action = SKAction.moveBy(x: self.scrollSpeed * 60, y: 0, duration: 1)
+                node.userData!["SS"]! = scrollSpeed
+                node.run(action)
+            }
             
-            if node.position.x > (self.frame.width/2)
+            if node.position.x >= (self.frame.width/2) && self.scrollSpeed == abs(self.scrollSpeed)
             {
                 self.colors.insert(self.colors.last!, at: 0)
                 self.colors.removeLast(1)
@@ -821,7 +859,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 node.fillColor = colors.last!
                 node.name = String(colors.last!.description)
             }
+            else if node.position.x <= (self.frame.width/2) * -1 - node.frame.width && self.scrollSpeed != abs(self.scrollSpeed)
+            {
+                node.position.x += self.frame.width + node.frame.width
+                node.fillColor = colors.first!
+                node.name = String(colors.first!.description)
+                
+                self.colors.append(self.colors.first!)
+                self.colors.removeFirst()
+            }
         }
+//        var colorsS:[String] = []
+//        for color in colors
+//        {
+//            if color.description == redColor.description
+//            {
+//                colorsS.append("red")
+//            }
+//            if color.description == blueColor.description
+//            {
+//                colorsS.append("blue")
+//            }
+//            if color.description == yellowColor.description
+//            {
+//                colorsS.append("yellow")
+//            }
+//            if color.description == greenColor.description
+//            {
+//                colorsS.append("green")
+//            }
+//        }
+//        print(colorsS)
     }
     
     func initiateSliders(number: Int) -> SKShapeNode
@@ -846,6 +914,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             slider.name = String(colors[3].description)
             slider.position.x = self.frame.width * (-6/8)
         }
+        slider.userData = ["SS": scrollSpeed]
         return slider
     }
     
