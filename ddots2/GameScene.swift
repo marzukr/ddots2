@@ -18,9 +18,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
 {
     var sliders:[SKShapeNode]! = []
     var scrollSpeed:CGFloat = 2
-    let gameScrollSpeed:CGFloat = 12
+    let gameScrollSpeed:CGFloat = 18
     let regScrollSpeed:CGFloat = 2
     let ballSpeed:CGFloat = 1409 / -3
+    let adFrequency:UInt32 = 5
     
     let redColor = UIColor(red: 242/255, green: 38/255, blue: 19/255, alpha: 1)
     let blueColor = UIColor(red: 25/255, green: 181/255, blue: 254/255, alpha: 1)
@@ -608,7 +609,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             button.isHidden = false
         }
         rankIcon.position = CGPoint(x: homeIcon.position.x + 150, y: 0)
-        homeIcon.run(moveRight)
+        homeIcon.run(moveRight, completion: ({
+            let randNum = arc4random_uniform(self.adFrequency)
+            if randNum == 0
+            {
+                (self.view?.window?.rootViewController as! GameViewController).presentFullScreenAd()
+            }
+        }))
         rankIcon.run(moveRight)
         rateIcon.position = noAdsIcon.position
         rateIcon.run(moveLeft)

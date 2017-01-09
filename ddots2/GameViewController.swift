@@ -14,6 +14,7 @@ import SwiftyStoreKit
 import StoreKit
 
 var sharedSecret = "860b2d45c04347dc96c9c9a16bb00bca"
+let isGeimerBetaVersion = false
 
 enum RegisteredPurchase : String {
     case NoAds = "testAd"
@@ -23,6 +24,8 @@ enum RegisteredPurchase : String {
 class GameViewController: UIViewController, GADBannerViewDelegate
 {
     @IBOutlet var bannerView: GADBannerView!
+    var bigAd:GADInterstitial!
+    var testDevices:[Any]!
     
     let bundleID = "com.platiplur.ddots2"
     
@@ -30,11 +33,8 @@ class GameViewController: UIViewController, GADBannerViewDelegate
         super.viewDidLoad()
         
         SwiftyStoreKit.completeTransactions(atomically: true) { products in
-            
             for product in products {
-                
                 if product.transaction.transactionState == .purchased || product.transaction.transactionState == .restored {
-                    
                     if product.needsFinishTransaction {
                         SwiftyStoreKit.finishTransaction(product.transaction)
                     }
@@ -43,15 +43,17 @@ class GameViewController: UIViewController, GADBannerViewDelegate
             }
         }
         
-        let userDefaults = Foundation.UserDefaults.standard
-        print("HOLA" + "\(userDefaults.bool(forKey: "didPurchaseNoAds"))")
+        testDevices = [kGADSimulatorID, "c004ebe3cfdc597aa62f15cf45117e8a", "de9a8891b5b6ab4f3c3ee561bbcc8e08"]
         
         let request = GADRequest()
-        request.testDevices = [kGADSimulatorID, "c004ebe3cfdc597aa62f15cf45117e8a", "de9a8891b5b6ab4f3c3ee561bbcc8e08"]
+        request.testDevices = testDevices
         bannerView.delegate = self
         bannerView.adUnitID = "ca-app-pub-2589543338977180/4128839558"
         bannerView.rootViewController = self
         bannerView.load(request)
+        
+        bigAd = createAd()
+//        bigAd.delegate = self
         
         updateNoAds()
         
@@ -94,10 +96,32 @@ class GameViewController: UIViewController, GADBannerViewDelegate
         return true
     }
     
+    func presentFullScreenAd()
+    {
+        if bigAd.isReady && !isGeimerBetaVersion
+        {
+            bigAd.present(fromRootViewController: self)
+            bigAd = self.createAd()
+        }
+    }
+    
+    func createAd() -> GADInterstitial
+    {
+        let ad = GADInterstitial(adUnitID: "ca-app-pub-2589543338977180/4488655951")
+        let request = GADRequest()
+        request.testDevices = testDevices
+        ad.load(request)
+        return ad
+    }
+    
     func updateNoAds()
     {
         let userDefaults = Foundation.UserDefaults.standard
         bannerView.isHidden = userDefaults.bool(forKey: "didPurchaseNoAds")
+        if isGeimerBetaVersion
+        {
+            bannerView.isHidden = isGeimerBetaVersion
+        }
     }
     
     func updateNoAdsLabel()

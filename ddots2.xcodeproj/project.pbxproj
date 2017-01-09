@@ -22,12 +22,23 @@
 		8628CEBB1E1B8195007B5985 /* SwiftyStoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8628CEBA1E1B8195007B5985 /* SwiftyStoreKit.framework */; };
 		865570C71E172F0C00F2D173 /* dotExplode.sks in Resources */ = {isa = PBXBuildFile; fileRef = 865570C61E172F0C00F2D173 /* dotExplode.sks */; };
 		86703BAC1E1B4F0700CB481D /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86703BAB1E1B4F0700CB481D /* GoogleMobileAds.framework */; };
-		86703BAE1E1B4F3000CB481D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 86703BAD1E1B4F3000CB481D /* GoogleService-Info.plist */; };
 		8676176D1E21D67B0099A160 /* DeviceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8676176C1E21D67B0099A160 /* DeviceKit.framework */; };
 		867617731E22E3F10099A160 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 8676176F1E22E3F10099A160 /* LICENSE.txt */; };
 		867617741E22E3F10099A160 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 867617701E22E3F10099A160 /* Roboto-Light.ttf */; };
 		867617751E22E3F10099A160 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 867617711E22E3F10099A160 /* Roboto-Medium.ttf */; };
 		867617761E22E3F10099A160 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 867617721E22E3F10099A160 /* Roboto-Regular.ttf */; };
+		869A52521E232E5C00420882 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 869A52511E232E5C00420882 /* GoogleService-Info.plist */; };
+		869A52541E232FB800420882 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869A52531E232FB700420882 /* AdSupport.framework */; };
+		869A52561E232FC800420882 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869A52551E232FC800420882 /* AudioToolbox.framework */; };
+		869A52571E232FD700420882 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86CE4F921E21A7D0008608A7 /* AVFoundation.framework */; };
+		869A52591E232FE500420882 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869A52581E232FE500420882 /* CoreGraphics.framework */; };
+		869A525B1E232FF700420882 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869A525A1E232FF700420882 /* CoreMedia.framework */; };
+		869A525D1E23300500420882 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869A525C1E23300500420882 /* CoreTelephony.framework */; };
+		869A52601E23301B00420882 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869A525E1E23301B00420882 /* EventKit.framework */; };
+		869A52611E23301B00420882 /* EventKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869A525F1E23301B00420882 /* EventKitUI.framework */; };
+		869A52631E23302B00420882 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869A52621E23302B00420882 /* MessageUI.framework */; };
+		869A52651E23303600420882 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869A52641E23303600420882 /* StoreKit.framework */; };
+		869A52671E23304000420882 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869A52661E23304000420882 /* SystemConfiguration.framework */; };
 		869C8BA41E1AF1B3005AF369 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 869C8BA31E1AF1B3005AF369 /* GameKit.framework */; };
 		86CE4F951E21A816008608A7 /* Daniel's song.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 86CE4F941E21A816008608A7 /* Daniel's song.m4a */; };
 		86CE4F9B1E21BDF4008608A7 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 86CE4F9A1E21BDF4008608A7 /* Launch Screen.storyboard */; };
@@ -78,12 +89,22 @@
 		8628CEBA1E1B8195007B5985 /* SwiftyStoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyStoreKit.framework; path = "../../Library/Developer/Xcode/DerivedData/ddots2-frgpavknpaeqnlhfqbxnixsjbjdm/Build/Products/Debug-iphoneos/SwiftyStoreKit/SwiftyStoreKit.framework"; sourceTree = "<group>"; };
 		865570C61E172F0C00F2D173 /* dotExplode.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = dotExplode.sks; sourceTree = "<group>"; };
 		86703BAB1E1B4F0700CB481D /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMobileAds.framework; sourceTree = "<group>"; };
-		86703BAD1E1B4F3000CB481D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8676176C1E21D67B0099A160 /* DeviceKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceKit.framework; path = "../../../Library/Developer/Xcode/DerivedData/ddots2-aisezcmcuvusnacyjiajkdluuiut/Build/Products/Debug-iphonesimulator/DeviceKit/DeviceKit.framework"; sourceTree = "<group>"; };
 		8676176F1E22E3F10099A160 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		867617701E22E3F10099A160 /* Roboto-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Light.ttf"; sourceTree = "<group>"; };
 		867617711E22E3F10099A160 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		867617721E22E3F10099A160 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
+		869A52511E232E5C00420882 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		869A52531E232FB700420882 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		869A52551E232FC800420882 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		869A52581E232FE500420882 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		869A525A1E232FF700420882 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		869A525C1E23300500420882 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		869A525E1E23301B00420882 /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
+		869A525F1E23301B00420882 /* EventKitUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKitUI.framework; path = System/Library/Frameworks/EventKitUI.framework; sourceTree = SDKROOT; };
+		869A52621E23302B00420882 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		869A52641E23303600420882 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		869A52661E23304000420882 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		869C8BA31E1AF1B3005AF369 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		86CE4F921E21A7D0008608A7 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		86CE4F941E21A816008608A7 /* Daniel's song.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Daniel's song.m4a"; sourceTree = "<group>"; };
@@ -101,6 +122,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				869A52671E23304000420882 /* SystemConfiguration.framework in Frameworks */,
+				869A52651E23303600420882 /* StoreKit.framework in Frameworks */,
+				869A52631E23302B00420882 /* MessageUI.framework in Frameworks */,
+				869A52601E23301B00420882 /* EventKit.framework in Frameworks */,
+				869A52611E23301B00420882 /* EventKitUI.framework in Frameworks */,
+				869A525D1E23300500420882 /* CoreTelephony.framework in Frameworks */,
+				869A525B1E232FF700420882 /* CoreMedia.framework in Frameworks */,
+				869A52591E232FE500420882 /* CoreGraphics.framework in Frameworks */,
+				869A52571E232FD700420882 /* AVFoundation.framework in Frameworks */,
+				869A52561E232FC800420882 /* AudioToolbox.framework in Frameworks */,
+				869A52541E232FB800420882 /* AdSupport.framework in Frameworks */,
 				8676176D1E21D67B0099A160 /* DeviceKit.framework in Frameworks */,
 				8628CEBB1E1B8195007B5985 /* SwiftyStoreKit.framework in Frameworks */,
 				86703BAC1E1B4F0700CB481D /* GoogleMobileAds.framework in Frameworks */,
@@ -154,7 +186,7 @@
 		8617AE0E1E15A1B400D13B90 /* ddots2 */ = {
 			isa = PBXGroup;
 			children = (
-				86703BAD1E1B4F3000CB481D /* GoogleService-Info.plist */,
+				869A52511E232E5C00420882 /* GoogleService-Info.plist */,
 				86703BAB1E1B4F0700CB481D /* GoogleMobileAds.framework */,
 				8617AE0F1E15A1B400D13B90 /* AppDelegate.swift */,
 				8617AE111E15A1B400D13B90 /* GameScene.sks */,
@@ -206,6 +238,16 @@
 		869C8BA21E1AF1B3005AF369 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				869A52661E23304000420882 /* SystemConfiguration.framework */,
+				869A52641E23303600420882 /* StoreKit.framework */,
+				869A52621E23302B00420882 /* MessageUI.framework */,
+				869A525E1E23301B00420882 /* EventKit.framework */,
+				869A525F1E23301B00420882 /* EventKitUI.framework */,
+				869A525C1E23300500420882 /* CoreTelephony.framework */,
+				869A525A1E232FF700420882 /* CoreMedia.framework */,
+				869A52581E232FE500420882 /* CoreGraphics.framework */,
+				869A52551E232FC800420882 /* AudioToolbox.framework */,
+				869A52531E232FB700420882 /* AdSupport.framework */,
 				8676176C1E21D67B0099A160 /* DeviceKit.framework */,
 				86CE4F921E21A7D0008608A7 /* AVFoundation.framework */,
 				8628CEBA1E1B8195007B5985 /* SwiftyStoreKit.framework */,
@@ -362,12 +404,12 @@
 				867617741E22E3F10099A160 /* Roboto-Light.ttf in Resources */,
 				86CE4F9B1E21BDF4008608A7 /* Launch Screen.storyboard in Resources */,
 				867617731E22E3F10099A160 /* LICENSE.txt in Resources */,
+				869A52521E232E5C00420882 /* GoogleService-Info.plist in Resources */,
 				8617AE1D1E15A1B400D13B90 /* Assets.xcassets in Resources */,
 				867617761E22E3F10099A160 /* Roboto-Regular.ttf in Resources */,
 				8617AE141E15A1B400D13B90 /* Actions.sks in Resources */,
 				865570C71E172F0C00F2D173 /* dotExplode.sks in Resources */,
 				867617751E22E3F10099A160 /* Roboto-Medium.ttf in Resources */,
-				86703BAE1E1B4F3000CB481D /* GoogleService-Info.plist in Resources */,
 				86CE4F951E21A816008608A7 /* Daniel's song.m4a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
