@@ -781,6 +781,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         retryIcon.userData = ["OP":retryIcon.position]
         
         buttons = [noAdsIcon, infoIcon, rateIcon, rankIcon, homeIcon, shareIcon, retryIcon]
+        if device.isPad
+        {
+            for button in buttons
+            {
+                button.scale(to: CGSize(width: 75, height: 75))
+            }
+        }
         
         for button in buttons
         {
@@ -855,7 +862,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         restorePurchasesLabel.position = CGPoint(x: self.frame.width, y: self.frame.height/8 * -1 * 3)
         if device.isPad
         {
-            restorePurchasesLabel.position = CGPoint(x: self.frame.width, y: self.frame.height/8 * -1 * 2.5)
+            restorePurchasesLabel.position = CGPoint(x: self.frame.width, y: self.frame.height/8 * -1 * 2.25)
         }
         restorePurchasesLabel.zPosition = 3
         
@@ -866,6 +873,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         infoBackdrop.zPosition = 2
         infoBackdrop.position = CGPoint.zero
         self.addChild(infoBackdrop)
+        
+        
+        if device.isPad
+        {
+            let highScoreLabels:[SKLabelNode] = [highScoreTitleLabel, highScoreLabel, scoreTitleLabel, scoreLabel]
+            for label in highScoreLabels
+            {
+                label.setScale(0.75)
+                if label != highScoreLabel
+                {
+                    label.position.y -= 25
+                    label.userData!["OP"]! = label.position
+                }
+            }
+            highScoreTitleLabel.position.y += 12
+            highScoreTitleLabel.userData!["OP"]! = highScoreTitleLabel.position
+        }
     }
     
     func slideSliders()
@@ -921,7 +945,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     
     func initiateSliders(number: Int) -> SKShapeNode
     {
-        let rect = CGRect(x: 0, y: -1 * self.frame.height/4 - 25, width: self.frame.width/4, height: 50)
+        var rect = CGRect(x: 0, y: -1 * self.frame.height/4 - 25, width: self.frame.width/4, height: 50)
+        let device = Device()
+        if device.isPad
+        {
+            rect = CGRect(x: 0, y: -1 * self.frame.height/4, width: self.frame.width/4, height: 50)
+        }
         let slider = SKShapeNode(rect: rect)
         slider.strokeColor = UIColor.clear
         slider.physicsBody = SKPhysicsBody(rectangleOf: CGSize.init(width: rect.width, height: rect.height), center: CGPoint(x: rect.midX, y: rect.midY))

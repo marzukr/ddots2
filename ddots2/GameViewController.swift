@@ -49,6 +49,7 @@ class GameViewController: UIViewController, GADBannerViewDelegate
         request.testDevices = testDevices
         bannerView.delegate = self
         bannerView.adUnitID = "ca-app-pub-2589543338977180/4128839558"
+        bannerView.adSize = kGADAdSizeSmartBannerPortrait
         bannerView.rootViewController = self
         bannerView.load(request)
         
