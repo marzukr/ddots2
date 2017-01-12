@@ -18,10 +18,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
 {
     var sliders:[SKShapeNode]! = []
     var scrollSpeed:CGFloat = 2
-    let gameScrollSpeed:CGFloat = 18
+    let gameScrollSpeed:CGFloat = 14
     let regScrollSpeed:CGFloat = 2
     let ballSpeed:CGFloat = 1409 / -3
-    let adFrequency:UInt32 = 5
+    let adFrequency:UInt32 = 7
     
     let redColor = UIColor(red: 242/255, green: 38/255, blue: 19/255, alpha: 1)
     let blueColor = UIColor(red: 25/255, green: 181/255, blue: 254/255, alpha: 1)
@@ -95,7 +95,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         setupBounds()
         setupAudio()
         
-        colors = [redColor,blueColor,greenColor,yellowColor]
+        colors = [yellowColor,redColor,blueColor,greenColor,yellowColor,redColor]
         
         moveRight = SKAction.moveBy(x: self.frame.width/2, y: 0, duration: 0.25)
         moveLeft = SKAction.moveBy(x: self.frame.width/2 * -1, y: 0, duration: 0.25)
@@ -104,7 +104,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         
         setupMenuLabels()
         
-        for i in -2...2
+        for i in 0...5
         {
             let slider = initiateSliders(number: i)
             self.addChild(slider)
@@ -884,46 +884,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 node.run(action)
             }
             
-            if node.position.x >= (self.frame.width/2) && self.scrollSpeed == abs(self.scrollSpeed)
+            var bigPos:CGFloat = 0
+            var smallPos:CGFloat = 0
+            for slider in sliders
             {
-                self.colors.insert(self.colors.last!, at: 0)
-                self.colors.removeLast(1)
+                if slider.position.x > bigPos
+                {
+                    bigPos = slider.position.x
+                }
+                if slider.position.x < smallPos
+                {
+                    smallPos = slider.position.x
+                }
+            }
+            
+            if node.position.x < self.frame.minX - node.frame.width && self.scrollSpeed != abs(self.scrollSpeed)
+            {
+                self.colors.append(self.colors[2])
+                self.colors.removeFirst()
                 
-                node.position.x -= self.frame.width + node.frame.width
+                node.position.x = bigPos + node.frame.width
                 node.fillColor = colors.last!
                 node.name = String(colors.last!.description)
             }
-            else if node.position.x <= (self.frame.width/2) * -1 - node.frame.width && self.scrollSpeed != abs(self.scrollSpeed)
+            else if node.position.x > self.frame.maxX && self.scrollSpeed == abs(self.scrollSpeed)
             {
-                node.position.x += self.frame.width + node.frame.width
+                self.colors.insert(self.colors[3], at: 0)
+                self.colors.removeLast()
+                
+                node.position.x = smallPos - node.frame.width
                 node.fillColor = colors.first!
                 node.name = String(colors.first!.description)
-                
-                self.colors.append(self.colors.first!)
-                self.colors.removeFirst()
             }
         }
-//        var colorsS:[String] = []
-//        for color in colors
-//        {
-//            if color.description == redColor.description
-//            {
-//                colorsS.append("red")
-//            }
-//            if color.description == blueColor.description
-//            {
-//                colorsS.append("blue")
-//            }
-//            if color.description == yellowColor.description
-//            {
-//                colorsS.append("yellow")
-//            }
-//            if color.description == greenColor.description
-//            {
-//                colorsS.append("green")
-//            }
-//        }
-//        print(colorsS)
     }
     
     func initiateSliders(number: Int) -> SKShapeNode
@@ -936,18 +929,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         slider.physicsBody?.categoryBitMask = PhysicsCategory.bar
         slider.physicsBody?.collisionBitMask = PhysicsCategory.none
         slider.physicsBody?.contactTestBitMask = PhysicsCategory.ball
-        if number != 2
-        {
-            slider.fillColor = colors[number+2]
-            slider.name = String(colors[number+2].description)
-            slider.position.x = self.frame.width * (CGFloat(2*number)/8)
-        }
-        else
-        {
-            slider.fillColor = colors[3]
-            slider.name = String(colors[3].description)
-            slider.position.x = self.frame.width * (-6/8)
-        }
+        
+        slider.fillColor = colors[number]
+        slider.name = String(colors[number].description)
+        slider.position.x = self.frame.width * (CGFloat(2*number - 6)/8)
         slider.userData = ["SS": scrollSpeed]
         return slider
     }
