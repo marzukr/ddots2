@@ -21,7 +21,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     let gameScrollSpeed:CGFloat = 14
     let regScrollSpeed:CGFloat = 2
     let ballSpeed:CGFloat = 1409 / -3
-    let adFrequency:UInt32 = 7
+    let adFrequency:UInt32 = 8
     
     let redColor = UIColor(red: 242/255, green: 38/255, blue: 19/255, alpha: 1)
     let blueColor = UIColor(red: 25/255, green: 181/255, blue: 254/255, alpha: 1)
@@ -68,6 +68,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     var scoreLabel:SKLabelNode!
     var highScoreTitleLabel:SKLabelNode!
     var highScoreLabel:SKLabelNode!
+    var newBestScoreLabel:SKLabelNode!
     
     var producedLabel:SKLabelNode!
     var platiplurLabel:SKLabelNode!
@@ -80,6 +81,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     
     var musicAudioPlayer:AVAudioPlayer!
     var effectAudioPlayer:AVAudioPlayer!
+    var gameFeedbackAudioPlayer:AVAudioPlayer!
     
     //MARK: END OF VARIABLES
     
@@ -91,6 +93,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         
         musicAudioPlayer = AVAudioPlayer()
         effectAudioPlayer = AVAudioPlayer()
+        gameFeedbackAudioPlayer = AVAudioPlayer()
         
         setupBounds()
         setupAudio()
@@ -138,6 +141,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 else
                 {
                     dot.physicsBody?.velocity.dy = ballSpeed
+                    if dot.frame.maxY < sliders[0].frame.minY && dot.userData!["Score"] as! Int == 1
+                    {
+                        self.score = self.score + (dot.userData!["Score"] as! Int)
+                        dot.userData?.setValue(0, forKey: "Score")
+                        self.playFeedbackAudio(isPointScored: true)
+                        self.checkHS()
+                    }
                 }
             }
             
@@ -310,19 +320,42 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     {
         if contact.bodyA.node?.name == contact.bodyB.node?.name
         {
+//            if contact.bodyA.node?.userData?["Score"] as? Int == 1
+//            {
+//                print((contact.bodyA.node?.frame.maxY)!)
+//                _ = Timer(timeInterval: TimeInterval((contact.bodyB.node?.frame.height)!/(contact.bodyA.node?.physicsBody?.velocity.dy)!), repeats: false, block: ({
+//                    timer in
+//                    self.score = self.score + (contact.bodyA.node?.userData!["Score"] as! Int)
+//                    contact.bodyA.node?.userData?.setValue(0, forKey: "Score")
+//                    //                contact.bodyA.node?.physicsBody?.velocity.dx = 0
+//                    self.playFeedbackAudio(isPointScored: true)
+//                    self.checkHS()
+//                }))
+//            }
+//            else if contact.bodyB.node?.userData?["Score"] as? Int == 1
+//            {
+//                print((contact.bodyB.node?.frame.maxY)!)
+//                _ = Timer(timeInterval: TimeInterval((contact.bodyA.node?.frame.height)!/(contact.bodyB.node?.physicsBody?.velocity.dy)!), repeats: false, block: ({
+//                    timer in
+//                    self.score = self.score + (contact.bodyB.node?.userData!["Score"] as! Int)
+//                    contact.bodyB.node?.userData?.setValue(0, forKey: "Score")
+//                    //                contact.bodyA.node?.physicsBody?.velocity.dx = 0
+//                    self.playFeedbackAudio(isPointScored: true)
+//                    self.checkHS()
+//                }))
+//            }
             if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask
             {
-                score = score + (contact.bodyA.node?.userData!["Score"] as! Int)
-                contact.bodyA.node?.userData?.setValue(0, forKey: "Score")
+//                score = score + (contact.bodyA.node?.userData!["Score"] as! Int)
+//                contact.bodyA.node?.userData?.setValue(0, forKey: "Score")
                 contact.bodyA.node?.physicsBody?.velocity.dx = 0
             }
             else
             {
-                score = score + (contact.bodyB.node?.userData!["Score"] as! Int)
-                contact.bodyB.node?.userData?.setValue(0, forKey: "Score")
+//                score = score + (contact.bodyB.node?.userData!["Score"] as! Int)
+//                contact.bodyB.node?.userData?.setValue(0, forKey: "Score")
                 contact.bodyB.node?.physicsBody?.velocity.dx = 0
             }
-            scoreCounterLabel.text = "\(score)"
         }
         else
         {
@@ -334,10 +367,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             {
                 gameOver(body: contact.bodyB)
             }
+            playFeedbackAudio(isPointScored: false)
         }
     }
     
     //MARK: CUSTOM METHODS
+    
+    func checkHS()
+    {
+        scoreCounterLabel.text = "\(score)"
+        let userDefaults = Foundation.UserDefaults.standard
+        let value  = userDefaults.integer(forKey: "SSHighScore")
+        if score == value + 1
+        {
+            let fadIn = SKAction.fadeIn(withDuration: 0.25)
+            let wait = SKAction.wait(forDuration: 1.25)
+            let fadeOut = SKAction.fadeOut(withDuration: 0.25)
+            let sequence = SKAction.sequence([fadIn, wait, fadeOut])
+            newBestScoreLabel.run(sequence)
+        }
+    }
     
     func setupAudio()
     {
@@ -349,6 +398,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             musicAudioPlayer.numberOfLoops = -1
             musicAudioPlayer.prepareToPlay()
             musicAudioPlayer.play()
+        }
+        catch
+        {
+            print(error)
+        }
+    }
+    
+    func playFeedbackAudio(isPointScored: Bool)
+    {
+        do
+        {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryAmbient)
+            try AVAudioSession.sharedInstance().setActive(true)
+            var audioArray = "playerDied"
+            if isPointScored
+            {
+                audioArray = "pointScored"
+            }
+            gameFeedbackAudioPlayer = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: audioArray, ofType: "mp3")!))
+            if gameFeedbackAudioPlayer.isPlaying
+            {
+                gameFeedbackAudioPlayer.stop()
+            }
+            gameFeedbackAudioPlayer.prepareToPlay()
+            gameFeedbackAudioPlayer.play()
         }
         catch
         {
@@ -668,6 +742,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         scoreLabel.run(moveDown)
         highScoreTitleLabel.run(moveDown)
         highScoreLabel.run(moveDown)
+        
+        newBestScoreLabel.removeAllActions()
+        newBestScoreLabel.run(SKAction.fadeAlpha(to: 0, duration: 0.25))
     }
     
     func shake(times: Int)
@@ -745,6 +822,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         titleLabel.position = CGPoint(x: 0, y: self.frame.height/4)
         titleLabel.fontColor = UIColor(red: 108/255, green: 122/255, blue: 137/255, alpha: 1)
         titleLabel.verticalAlignmentMode = .center
+        
+        newBestScoreLabel = self.childNode(withName: "newBestScoreLabel") as! SKLabelNode
+        newBestScoreLabel.position = titleLabel.position
+        newBestScoreLabel.fontColor = titleLabel.fontColor
+        newBestScoreLabel.verticalAlignmentMode = .center
+        newBestScoreLabel.alpha = 0
         
         playLabel = self.childNode(withName: "playLabel") as! SKLabelNode
         playLabel.position = CGPoint(x: 0, y: titleLabel.position.y - titleLabel.frame.height/2 - 75)
