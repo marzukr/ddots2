@@ -7,6 +7,7 @@ target 'ddots2' do
 
   pod 'SwiftyStoreKit'
   pod 'DeviceKit', '~> 1.0'
+  pod 'Firebase/Core'
 
   target 'ddots2Tests' do
     inherit! :search_paths

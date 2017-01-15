@@ -11,6 +11,7 @@ import GameplayKit
 import GameKit
 import AVFoundation
 import DeviceKit
+import Firebase
 
 var noAdsIcon:SKSpriteNode!
 
@@ -260,6 +261,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                             rateApp(appId: "id1191366864", completion: { success in
                                 button.colorBlendFactor = 0
                             })
+                            FIRAnalytics.logEvent(withName: "ratedApp", parameters: nil)
                         }
                         if button == noAdsIcon && userDefaults.bool(forKey: "didPurchaseNoAds") == false
                         {
@@ -273,6 +275,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                         if button == shareIcon
                         {
                             share()
+                            FIRAnalytics.logEvent(withName: "sharedScore", parameters: nil)
                         }
                     }
                 }
@@ -335,6 +338,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     UIApplication.shared.open(url as! URL, options: [:], completionHandler: { (success) in
                         self.platiplurLabel.colorBlendFactor = 0
                     })
+                    FIRAnalytics.logEvent(withName: "visitedPlatiplurWebsite", parameters: nil)
                 }
                 else if restorePurchasesLabel.contains(location)
                 {
@@ -855,6 +859,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         
         let fadeOut = SKAction.fadeOut(withDuration: 0.25)
         scoreCounterLabel.run(fadeOut)
+        
+        FIRAnalytics.logEvent(withName: kFIREventPostScore, parameters: [kFIRParameterLevel: "Slide Sort" as NSObject, kFIRParameterCharacter: "Slide Sort" as NSObject, kFIRParameterScore: "\(score)" as NSObject])
         
         let userDefaults = Foundation.UserDefaults.standard
         let value  = userDefaults.integer(forKey: "SSHighScore")
