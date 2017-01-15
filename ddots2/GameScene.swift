@@ -47,6 +47,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     var isOnGameOver:Bool = false
     var isOnInfoScreen:Bool = false
     var isTouchingScreen:Bool = false
+    var isOnTutorial:Bool = false
     
     struct PhysicsCategory
     {
@@ -83,6 +84,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     var effectAudioPlayer:AVAudioPlayer!
     var gameFeedbackAudioPlayer:AVAudioPlayer!
     
+    var cAIS:Int?
+    var shouldBeOnTutorial:Bool = false
+    var lastTouchWasRight:String?
+    
+    var howLabel:SKLabelNode!
+    var unoTutLabel:SKLabelNode!
+    var dosTutLabel:SKLabelNode!
+    var tresTutLabel:SKLabelNode!
+    var leftTouch:SKSpriteNode!
+    var rightTouch:SKSpriteNode!
+    
     //MARK: END OF VARIABLES
     
     override func didMove(to view: SKView)
@@ -107,6 +119,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         
         setupMenuLabels()
         
+        let userDefaults = Foundation.UserDefaults.standard
+        if userDefaults.bool(forKey: "hasPlayedGame") == false
+        {
+            shouldBeOnTutorial = true
+            userDefaults.set(true, forKey: "hasPlayedGame")
+        }
+        
         for i in 0...5
         {
             let slider = initiateSliders(number: i)
@@ -128,6 +147,49 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
 //            if isTouchingScreen && !isOnGameOver
             if !isOnGameOver
             {
+                if cAIS == nil && dots.count > 0 && isOnTutorial
+                {
+                    for (index,slider) in sliders.enumerated()
+                    {
+                        if slider.frame.maxX > frame.minX && slider.position.x < frame.maxX && slider.name == dots[0].name
+                        {
+                            cAIS = index
+                        }
+                    }
+                }
+                else if isOnTutorial && dots.count > 0 && cAIS != nil
+                {
+                    if dots[0].frame.minY <= sliders[0].frame.maxY || (dots[0].frame.minX > sliders[cAIS!].frame.minX+50 && dots[0].frame.maxX < sliders[cAIS!].frame.maxX-50)
+                    {
+                        scrollSpeed = 0
+                        if lastTouchWasRight != nil && lastTouchWasRight == "none"
+                        {
+                            rightTouch.texture = SKTexture(imageNamed: "touch")
+                            leftTouch.texture = SKTexture(imageNamed: "touch")
+                        }
+                        lastTouchWasRight = "none"
+                    }
+                    else if dots[0].frame.midX > sliders[cAIS!].frame.midX
+                    {
+                        scrollSpeed = gameScrollSpeed
+                        if lastTouchWasRight != nil && lastTouchWasRight == "right"
+                        {
+                            rightTouch.texture = SKTexture(imageNamed: "touchFilled")
+                            leftTouch.texture = SKTexture(imageNamed: "touch")
+                        }
+                        lastTouchWasRight = "right"
+                    }
+                    else if dots[0].frame.midX < sliders[cAIS!].frame.midX
+                    {
+                        scrollSpeed = gameScrollSpeed * -1
+                        if lastTouchWasRight != nil && lastTouchWasRight == "left"
+                        {
+                            leftTouch.texture = SKTexture(imageNamed: "touchFilled")
+                            rightTouch.texture = SKTexture(imageNamed: "touch")
+                        }
+                        lastTouchWasRight = "left"
+                    }
+                }
                 slideSliders()
             }
             
@@ -153,6 +215,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             
             if dots.count < 1 && !isOnGameOver
             {
+                if isOnTutorial
+                {
+                    cAIS = nil
+                }
                 spawnDots()
             }
         }
@@ -163,7 +229,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         for touch in touches
         {
             let location = touch.location(in: self)
-            if (isOnMenu || isOnGameOver) && isOnInfoScreen == false
+            if (isOnMenu || isOnGameOver || isOnTutorial) && isOnInfoScreen == false
             {
                 var isButton = false
                 for button in buttons
@@ -210,10 +276,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                         }
                     }
                 }
-                if !isButton && isOnMenu
+                if !isButton && isOnMenu && !isOnTutorial
                 {
                     playButtonAudio()
-                    playLabel.removeAllActions()
                     let disappear = SKAction.fadeAlpha(to: 0, duration: 0.25)
                     noAdsIcon.run(moveRight, completion: ({
                         noAdsIcon.isHidden = true
@@ -230,13 +295,33 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     titleLabel.run(moveUp, completion: ({
                         self.titleLabel.isHidden = true
                     }))
+                    if !shouldBeOnTutorial
+                    {
+                        playLabel.removeAllActions()
+                        let fadeIn = SKAction.fadeIn(withDuration: 0.25)
+                        scoreCounterLabel.run(fadeIn)
+                        scrollSpeed = gameScrollSpeed
+                    }
+                    else
+                    {
+                        isOnTutorial = true
+                        presentTutorial()
+                    }
                     playLabel.run(disappear, completion: ({
                         self.playLabel.isHidden = true
+                        if self.shouldBeOnTutorial
+                        {
+                            self.playLabel.position.y -= 200
+                            self.playLabel.isHidden = false
+                            let reappear = SKAction.fadeAlpha(to: 1, duration: 0.25)
+                            self.playLabel.run(reappear)
+                        }
                     }))
-                    let fadeIn = SKAction.fadeIn(withDuration: 0.25)
-                    scoreCounterLabel.run(fadeIn)
-                    scrollSpeed = gameScrollSpeed
                     isOnMenu = false
+                }
+                if isOnTutorial && shouldBeOnTutorial == false
+                {
+                    dismissTutorial()
                 }
             }
             else if isOnInfoScreen
@@ -267,11 +352,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             else
             {
                 isTouchingScreen = true
-                if location.x > self.frame.midX
+                if location.x > self.frame.midX && !isOnTutorial
                 {
                     scrollSpeed = gameScrollSpeed
                 }
-                else
+                else if !isOnTutorial
                 {
                     scrollSpeed = gameScrollSpeed * -1
                 }
@@ -309,7 +394,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 }
             }
         }
-        else
+        else if !isOnTutorial
         {
             isTouchingScreen = false
             scrollSpeed = 0
@@ -359,11 +444,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         }
         else
         {
-            if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask && !isOnGameOver
+            if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask && !isOnGameOver && !isOnTutorial
             {
                 gameOver(body: contact.bodyA)
             }
-            else
+            else if !isOnTutorial
             {
                 gameOver(body: contact.bodyB)
             }
@@ -373,18 +458,63 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     
     //MARK: CUSTOM METHODS
     
+    func presentTutorial()
+    {
+        let fadeIn = SKAction.fadeIn(withDuration: 0.25)
+        let labels = [howLabel, unoTutLabel, dosTutLabel, tresTutLabel]
+        for labelE in labels
+        {
+            labelE?.run(fadeIn)
+        }
+        rightTouch.run(fadeIn, completion: ({
+            self.shouldBeOnTutorial = false
+        }))
+        leftTouch.run(fadeIn)
+    }
+    
+    func dismissTutorial()
+    {
+        let fadeOut = SKAction.fadeAlpha(to: 0, duration: 0.25)
+        let fadeIn = SKAction.fadeAlpha(to: 1, duration: 0.25)
+        let labels = [howLabel, unoTutLabel, dosTutLabel, tresTutLabel]
+        for labelE in labels
+        {
+            labelE?.run(fadeOut)
+        }
+        rightTouch.run(fadeOut)
+        leftTouch.run(fadeOut)
+        playLabel.removeAllActions()
+        playLabel.run(fadeOut, completion: ({
+            self.playLabel.isHidden = true
+            self.playLabel.position.y += 200
+        }))
+        scoreCounterLabel.run(fadeIn)
+        isOnTutorial = false
+        for dot in dots
+        {
+            let shrink = SKAction.scale(to: 0, duration: 0.1)
+            dot.run(shrink, completion: ({
+                dot.removeFromParent()
+                self.dots = []
+            }))
+        }
+    }
+    
     func checkHS()
     {
-        scoreCounterLabel.text = "\(score)"
-        let userDefaults = Foundation.UserDefaults.standard
-        let value  = userDefaults.integer(forKey: "SSHighScore")
-        if score == value + 1
+        if !isOnTutorial
         {
-            let fadIn = SKAction.fadeIn(withDuration: 0.25)
-            let wait = SKAction.wait(forDuration: 1.25)
-            let fadeOut = SKAction.fadeOut(withDuration: 0.25)
-            let sequence = SKAction.sequence([fadIn, wait, fadeOut])
-            newBestScoreLabel.run(sequence)
+            scoreCounterLabel.text = "\(score)"
+            let userDefaults = Foundation.UserDefaults.standard
+            let value  = userDefaults.integer(forKey: "SSHighScore")
+            if score == value + 1
+            {
+                let fadIn = SKAction.fadeIn(withDuration: 0.25)
+                let wait = SKAction.wait(forDuration: 1.25)
+                let fadeOut = SKAction.fadeOut(withDuration: 0.25)
+                let sequence = SKAction.sequence([fadIn, wait, fadeOut])
+                newBestScoreLabel.run(sequence)
+            }
         }
     }
     
@@ -529,7 +659,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         self.scene?.view?.drawHierarchy(in: bounds!, afterScreenUpdates: true)
         let screenShot = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        (self.view?.window?.rootViewController as! GameViewController).bannerView.isHidden = false
+        (self.view?.window?.rootViewController as! GameViewController).updateNoAds()
+//        (self.view?.window?.rootViewController as! GameViewController).bannerView.isHidden = false
         return screenShot!
     }
     
@@ -554,6 +685,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         (self.view?.window?.rootViewController as! GameViewController).present(activityVC, animated: true, completion: ({
             self.shareIcon.colorBlendFactor = 0
         }))
+//        (self.view?.window?.rootViewController as! GameViewController).updateNoAds()
     }
     
     func retry()
@@ -957,7 +1089,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         infoBackdrop.position = CGPoint.zero
         self.addChild(infoBackdrop)
         
-        
         if device.isPad
         {
             let highScoreLabels:[SKLabelNode] = [highScoreTitleLabel, highScoreLabel, scoreTitleLabel, scoreLabel]
@@ -973,6 +1104,44 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             highScoreTitleLabel.position.y += 12
             highScoreTitleLabel.userData!["OP"]! = highScoreTitleLabel.position
         }
+        
+        howLabel = self.childNode(withName: "howLabel") as! SKLabelNode
+        howLabel.position = CGPoint(x: 0, y: self.frame.height*0.25)
+        howLabel.alpha = 0
+        howLabel.zPosition = 20
+        howLabel.fontColor = titleLabel.fontColor
+        
+        unoTutLabel = self.childNode(withName: "unoTutLabel") as! SKLabelNode
+        unoTutLabel.position = CGPoint(x: 0, y: howLabel.frame.minY - 25)
+        unoTutLabel.alpha = 0
+        unoTutLabel.zPosition = 20
+        unoTutLabel.fontColor = titleLabel.fontColor
+        
+        dosTutLabel = self.childNode(withName: "dosTutLabel") as! SKLabelNode
+        dosTutLabel.position = CGPoint(x: 0, y: unoTutLabel.frame.minY - 25)
+        dosTutLabel.alpha = 0
+        dosTutLabel.zPosition = 20
+        dosTutLabel.fontColor = titleLabel.fontColor
+        
+        tresTutLabel = self.childNode(withName: "tresTutLabel") as! SKLabelNode
+        tresTutLabel.position = CGPoint(x: 0, y: dosTutLabel.frame.minY - 25)
+        tresTutLabel.alpha = 0
+        tresTutLabel.zPosition = 20
+        tresTutLabel.fontColor = titleLabel.fontColor
+        
+        leftTouch = self.childNode(withName: "leftTouch") as! SKSpriteNode
+        leftTouch.position = CGPoint(x: 0 - self.frame.width/4, y: 0 - self.frame.height/8)
+        leftTouch.alpha = 0
+        leftTouch.zPosition = 20
+        leftTouch.color = titleLabel.fontColor!
+        leftTouch.colorBlendFactor = 1
+        
+        rightTouch = self.childNode(withName: "rightTouch") as! SKSpriteNode
+        rightTouch.position = CGPoint(x: 0 + self.frame.width/4, y: 0 - self.frame.height/8)
+        rightTouch.alpha = 0
+        rightTouch.zPosition = 20
+        rightTouch.color = titleLabel.fontColor!
+        rightTouch.colorBlendFactor = 1
     }
     
     func slideSliders()
