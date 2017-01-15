@@ -14,7 +14,7 @@ import SwiftyStoreKit
 import StoreKit
 
 var sharedSecret = "860b2d45c04347dc96c9c9a16bb00bca"
-let isGeimerBetaVersion = true
+let isGeimerBetaVersion = false
 
 enum RegisteredPurchase : String {
     case NoAds = "testAd"

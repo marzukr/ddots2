@@ -251,6 +251,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                         if button == rankIcon
                         {
                             showLeaderBoard()
+                            FIRAnalytics.logEvent(withName: "gameCenterUsed", parameters: nil)
                         }
                         if button == infoIcon
                         {
