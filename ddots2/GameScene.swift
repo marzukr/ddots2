@@ -22,7 +22,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     let gameScrollSpeed:CGFloat = 14
     let regScrollSpeed:CGFloat = 2
     let ballSpeed:CGFloat = 1409 / -3
-    let adFrequency:UInt32 = 8
+    let adFrequency:UInt32 = 6
     
     let redColor = UIColor(red: 242/255, green: 38/255, blue: 19/255, alpha: 1)
     let blueColor = UIColor(red: 25/255, green: 181/255, blue: 254/255, alpha: 1)
@@ -286,23 +286,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     let disappear = SKAction.fadeAlpha(to: 0, duration: 0.25)
                     noAdsIcon.run(moveRight, completion: ({
                         noAdsIcon.isHidden = true
+                        noAdsIcon.removeFromParent()
                     }))
                     infoIcon.run(moveRight, completion: ({
                         self.infoIcon.isHidden = true
+                        self.infoIcon.removeFromParent()
                     }))
                     rateIcon.run(moveLeft, completion: ({
                         self.rateIcon.isHidden = true
+                        self.rateIcon.removeFromParent()
                     }))
                     rankIcon.run(moveLeft, completion: ({
                         self.rankIcon.isHidden = true
+                        self.rankIcon.removeFromParent()
                     }))
                     titleLabel.run(moveUp, completion: ({
                         self.titleLabel.isHidden = true
+                        self.titleLabel.removeFromParent()
                     }))
                     if !shouldBeOnTutorial
                     {
                         playLabel.removeAllActions()
                         let fadeIn = SKAction.fadeIn(withDuration: 0.25)
+                        self.addChild(scoreCounterLabel)
                         scoreCounterLabel.run(fadeIn)
                         scrollSpeed = gameScrollSpeed
                     }
@@ -319,6 +325,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                             self.playLabel.isHidden = false
                             let reappear = SKAction.fadeAlpha(to: 1, duration: 0.25)
                             self.playLabel.run(reappear)
+                        }
+                        else
+                        {
+                            self.playLabel.removeFromParent()
                         }
                     }))
                     isOnMenu = false
@@ -469,8 +479,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         let labels = [howLabel, unoTutLabel, dosTutLabel, tresTutLabel]
         for labelE in labels
         {
+            self.addChild(labelE!)
             labelE?.run(fadeIn)
         }
+        self.addChild(rightTouch)
+        self.addChild(leftTouch)
         rightTouch.run(fadeIn, completion: ({
             self.shouldBeOnTutorial = false
         }))
@@ -484,15 +497,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         let labels = [howLabel, unoTutLabel, dosTutLabel, tresTutLabel]
         for labelE in labels
         {
-            labelE?.run(fadeOut)
+            labelE?.run(fadeOut, completion: ({
+                labelE?.removeFromParent()
+            }))
         }
-        rightTouch.run(fadeOut)
-        leftTouch.run(fadeOut)
+        let touches = [rightTouch, leftTouch]
+        for touch in touches
+        {
+            touch?.run(fadeOut, completion: ({
+                touch?.removeFromParent()
+            }))
+        }
         playLabel.removeAllActions()
         playLabel.run(fadeOut, completion: ({
             self.playLabel.isHidden = true
             self.playLabel.position.y += 200
+            self.playLabel.removeFromParent()
         }))
+        self.addChild(scoreCounterLabel)
         scoreCounterLabel.run(fadeIn)
         isOnTutorial = false
         for dot in dots
@@ -516,11 +538,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             let value  = userDefaults.integer(forKey: "SSHighScore")
             if score == value + 1
             {
+                self.newBestScoreLabel.removeAllActions()
+                self.addChild(newBestScoreLabel)
                 let fadIn = SKAction.fadeIn(withDuration: 0.25)
                 let wait = SKAction.wait(forDuration: 1.25)
-                let fadeOut = SKAction.fadeOut(withDuration: 0.25)
-                let sequence = SKAction.sequence([fadIn, wait, fadeOut])
-                newBestScoreLabel.run(sequence)
+                let fadeOut = SKAction.fadeAlpha(to: 0, duration: 0.25)
+                newBestScoreLabel.run(fadIn, completion: ({
+                    self.newBestScoreLabel.run(wait, completion: ({
+                        self.newBestScoreLabel.run(fadeOut, completion: ({
+                            self.newBestScoreLabel.removeFromParent()
+                        }))
+                    }))
+                }))
             }
         }
     }
@@ -628,15 +657,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         let newfadeOut = SKAction.fadeOut(withDuration: 0.25)
         let newMoveRight = SKAction.moveBy(x: self.frame.width, y: 0, duration: 0.25)
         let newMoveLeft = SKAction.moveBy(x: self.frame.width * -1, y: 0, duration: 0.25)
-        codedLabel.run(newMoveRight)
-        zukLabel.run(newMoveRight)
-        musicLabel.run(newMoveLeft)
-        hessLabel.run(newMoveLeft)
-        producedLabel.run(newMoveLeft)
-        platiplurLabel.run(newMoveLeft)
-        restorePurchasesLabel.run(newMoveRight)
+        let right = [codedLabel, zukLabel, restorePurchasesLabel]
+        for righer in right
+        {
+            righer?.run(newMoveRight, completion: ({
+                righer?.removeFromParent()
+            }))
+        }
+        let left = [musicLabel, hessLabel, producedLabel, platiplurLabel]
+        for lefter in left
+        {
+            lefter?.run(newMoveLeft, completion: ({
+                lefter?.removeFromParent()
+            }))
+        }
         infoBackdrop.run(newfadeOut, completion: ({
             self.isOnInfoScreen = false
+            self.infoBackdrop.removeFromParent()
         }))
     }
     
@@ -647,7 +684,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         let newMoveRight = SKAction.moveBy(x: self.frame.width, y: 0, duration: 0.25)
         let newMoveLeft = SKAction.moveBy(x: self.frame.width * -1, y: 0, duration: 0.25)
         let newFadeIn = SKAction.fadeAlpha(to: 0.9, duration: 0.25)
-        
+        let nodes:[SKNode] = [infoBackdrop, codedLabel, zukLabel, musicLabel, hessLabel, producedLabel, platiplurLabel, restorePurchasesLabel]
+        for node in nodes
+        {
+            self.addChild(node)
+        }
         infoBackdrop.run(newFadeIn)
         codedLabel.run(newMoveLeft)
         zukLabel.run(newMoveLeft)
@@ -697,24 +738,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     
     func retry()
     {
-        homeIcon.run(moveLeft)
+        homeIcon.run(moveLeft, completion: ({
+            self.homeIcon.removeFromParent()
+        }))
         rankIcon.run(moveLeft, completion: ({
             self.rankIcon.position.x -= 150
+            self.rankIcon.removeFromParent()
         }))
         rateIcon.run(moveRight, completion: ({
             self.rateIcon.position.x = self.rankIcon.position.x + 150
+            self.rateIcon.removeFromParent()
         }))
         noAdsIcon.run(moveRight, completion: ({
             noAdsIcon.position.x -= 150
+            noAdsIcon.removeFromParent()
             self.retryIcon.colorBlendFactor = 0
         }))
-        scoreTitleLabel.run(moveUp)
-        scoreLabel.run(moveUp)
-        highScoreTitleLabel.run(moveUp)
-        highScoreLabel.run(moveUp)
-        retryIcon.run(moveLeft)
-        shareIcon.run(moveRight)
+        let upMov = [scoreTitleLabel, scoreLabel, highScoreTitleLabel, highScoreLabel]
+        for label in upMov
+        {
+            label?.run(moveUp, completion: ({
+                label?.removeFromParent()
+            }))
+        }
+        retryIcon.run(moveLeft, completion: ({
+            self.retryIcon.removeFromParent()
+        }))
+        shareIcon.run(moveRight, completion: ({
+            self.shareIcon.removeFromParent()
+        }))
         score = 0
+        self.addChild(scoreCounterLabel)
         scoreCounterLabel.text = "\(0)"
         let fadeIn = SKAction.fadeIn(withDuration: 0.25)
         scoreCounterLabel.run(fadeIn)
@@ -724,6 +778,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     
     func startHomeOwnersAssociation()
     {
+        self.addChild(infoIcon)
         infoIcon.position = CGPoint(x: noAdsIcon.position.x - self.frame.width, y: 0)
         let fakeNoAds:SKSpriteNode! = noAdsIcon.copy() as! SKSpriteNode
         fakeNoAds.position.x = infoIcon.position.x - 150
@@ -740,12 +795,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         let altRightWingers:[SKLabelNode] = [scoreTitleLabel,scoreLabel,highScoreLabel,highScoreTitleLabel]
         for conservative in rightWingers
         {
-            conservative.run(newMoveRight)
+            if conservative == homeIcon
+            {
+                conservative.run(newMoveRight, completion: ({
+                    conservative.removeFromParent()
+                }))
+            }
+            else
+            {
+                conservative.run(newMoveRight)
+            }
         }
         for neoNazi in altRightWingers
         {
             neoNazi.run(newMoveRight, completion: ({
                 neoNazi.position = neoNazi.userData!["OP"] as! CGPoint
+                neoNazi.removeFromParent()
             }))
         }
         
@@ -771,6 +836,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             self.homeIcon.position = CGPoint(x: self.rankIcon.position.x - self.frame.width/2, y: 0)
         }))
         
+        self.addChild(titleLabel)
+        self.addChild(playLabel)
         titleLabel.position = CGPoint(x: -1 * self.frame.width, y: self.frame.height/4)
         titleLabel.isHidden = false
         playLabel.position = CGPoint(x: -1 * self.frame.width, y: titleLabel.position.y - titleLabel.frame.height/2 - 75)
@@ -780,9 +847,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         playLabel.run(newMoveRight)
         playLabel.run(playLabel.userData!["UA"] as! SKAction)
         
-        shareIcon.run(moveRight)
+        shareIcon.run(moveRight, completion: ({
+            self.shareIcon.removeFromParent()
+        }))
         retryIcon.run(newMoveRight, completion: ({
             self.retryIcon.position = self.retryIcon.userData!["OP"] as! CGPoint
+            self.retryIcon.removeFromParent()
         }))
         
         score = 0
@@ -841,7 +911,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         for button in buttons
         {
             button.isHidden = false
+            if button != infoIcon
+            {
+                self.addChild(button)
+            }
         }
+        print(shareIcon.position)
         rankIcon.position = CGPoint(x: homeIcon.position.x + 150, y: 0)
         homeIcon.run(moveRight, completion: ({
             let randNum = arc4random_uniform(self.adFrequency)
@@ -859,7 +934,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         shareIcon.run(moveLeft)
         
         let fadeOut = SKAction.fadeOut(withDuration: 0.25)
-        scoreCounterLabel.run(fadeOut)
+        scoreCounterLabel.run(fadeOut, completion: ({
+            self.scoreCounterLabel.removeFromParent()
+        }))
         
         FIRAnalytics.logEvent(withName: kFIREventPostScore, parameters: [kFIRParameterLevel: "Slide Sort" as NSObject, kFIRParameterCharacter: "Slide Sort" as NSObject, kFIRParameterScore: "\(score)" as NSObject])
         
@@ -877,6 +954,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             highScore = value
         }
         saveHighscore()
+        
+        let labels = [highScoreLabel, highScoreTitleLabel, scoreLabel, scoreTitleLabel]
+        for label in labels
+        {
+            self.addChild(label!)
+        }
+        
         highScoreLabel.text = "\(highScore)"
         scoreTitleLabel.run(moveDown)
         scoreLabel.text = "\(score)"
@@ -885,7 +969,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         highScoreLabel.run(moveDown)
         
         newBestScoreLabel.removeAllActions()
-        newBestScoreLabel.run(SKAction.fadeAlpha(to: 0, duration: 0.25))
+        newBestScoreLabel.run(SKAction.fadeAlpha(to: 0, duration: 0.25), completion: ({
+            self.newBestScoreLabel.removeFromParent()
+        }))
     }
     
     func shake(times: Int)
@@ -969,6 +1055,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         newBestScoreLabel.fontColor = titleLabel.fontColor
         newBestScoreLabel.verticalAlignmentMode = .center
         newBestScoreLabel.alpha = 0
+        newBestScoreLabel.removeFromParent()
         
         playLabel = self.childNode(withName: "playLabel") as! SKLabelNode
         playLabel.position = CGPoint(x: 0, y: titleLabel.position.y - titleLabel.frame.height/2 - 75)
@@ -996,13 +1083,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         homeIcon = self.childNode(withName: "homeIcon") as! SKSpriteNode
         homeIcon.position = CGPoint(x: rankIcon.position.x - self.frame.width/2, y: 0)
         homeIcon.isHidden = true
+        homeIcon.removeFromParent()
         
         shareIcon = self.childNode(withName: "shareIcon") as! SKSpriteNode
         shareIcon.position = CGPoint(x: 75 + self.frame.width/2, y: -150)
+        shareIcon.removeFromParent()
         
         retryIcon = self.childNode(withName: "retryIcon") as! SKSpriteNode
         retryIcon.position = CGPoint(x: -75 - self.frame.width/2, y: shareIcon.position.y)
         retryIcon.userData = ["OP":retryIcon.position]
+        retryIcon.removeFromParent()
         
         buttons = [noAdsIcon, infoIcon, rateIcon, rankIcon, homeIcon, shareIcon, retryIcon]
         if device.isPad
@@ -1027,26 +1117,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         scoreCounterLabel.fontColor = UIColor(red: 191/255, green: 191/255, blue: 191/255, alpha: 1)
         scoreCounterLabel.zPosition = 5
         scoreCounterLabel.alpha = 0
+        scoreCounterLabel.removeFromParent()
         
         scoreTitleLabel = self.childNode(withName: "scoreTitleLabel") as! SKLabelNode
         scoreTitleLabel.position = CGPoint(x: 0, y: (self.frame.height*(3/8)) + self.frame.height/2)
         scoreTitleLabel.userData = ["OP":scoreTitleLabel.position]
         scoreTitleLabel.fontColor = UIColor(red: 191/255, green: 191/255, blue: 191/255, alpha: 1)
+        scoreTitleLabel.removeFromParent()
         
         scoreLabel = self.childNode(withName: "scoreLabel") as! SKLabelNode
         scoreLabel.position = CGPoint(x: 0, y: scoreTitleLabel.position.y - scoreTitleLabel.frame.height/2 - 75)
         scoreLabel.userData = ["OP":scoreLabel.position]
         scoreLabel.fontColor = UIColor(red: 108/255, green: 122/255, blue: 137/255, alpha: 1)
+        scoreLabel.removeFromParent()
         
         highScoreTitleLabel = self.childNode(withName: "highScoreTitleLabel") as! SKLabelNode
         highScoreTitleLabel.position = CGPoint(x: 0, y: scoreLabel.position.y - scoreLabel.frame.height/2 - 75)
         highScoreTitleLabel.userData = ["OP":highScoreTitleLabel.position]
         highScoreTitleLabel.fontColor = UIColor(red: 191/255, green: 191/255, blue: 191/255, alpha: 1)
+        highScoreTitleLabel.removeFromParent()
         
         highScoreLabel = self.childNode(withName: "highScoreLabel") as! SKLabelNode
         highScoreLabel.position = CGPoint(x: 0, y: highScoreTitleLabel.position.y - highScoreTitleLabel.frame.height/2 - 75)
         highScoreLabel.userData = ["OP":highScoreLabel.position]
         highScoreLabel.fontColor = UIColor(red: 108/255, green: 122/255, blue: 137/255, alpha: 1)
+        highScoreLabel.removeFromParent()
         
         if device.isPad
         {
@@ -1061,26 +1156,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         platiplurLabel = self.childNode(withName: "platiplurLabel") as! SKLabelNode
         platiplurLabel.zPosition = 3
         platiplurLabel.position = CGPoint(x: self.frame.width * -1, y: self.frame.height*(1/8))
+        platiplurLabel.removeFromParent()
         
         producedLabel = self.childNode(withName: "producedLabel") as! SKLabelNode
         producedLabel.position = CGPoint(x: self.frame.width * -1, y: platiplurLabel.position.y + 75)
         producedLabel.zPosition = 3
+        producedLabel.removeFromParent()
         
         codedLabel = self.childNode(withName: "codedLabel") as! SKLabelNode
         codedLabel.position = CGPoint(x: self.frame.width, y: 75/2 + codedLabel.frame.height/2)
         codedLabel.zPosition = 3
+        codedLabel.removeFromParent()
         
         zukLabel = self.childNode(withName: "zukLabel") as! SKLabelNode
         zukLabel.position = CGPoint(x: self.frame.width, y: codedLabel.position.y - 75)
         zukLabel.zPosition = 3
+        zukLabel.removeFromParent()
         
         musicLabel = self.childNode(withName: "musicLabel") as! SKLabelNode
         musicLabel.position = CGPoint(x: self.frame.width * -1, y: self.frame.height * (-1/8))
         musicLabel.zPosition = 3
+        musicLabel.removeFromParent()
         
         hessLabel = self.childNode(withName: "hessLabel") as! SKLabelNode
         hessLabel.position = CGPoint(x: self.frame.width * -1, y: musicLabel.position.y - 75)
         hessLabel.zPosition = 3
+        hessLabel.removeFromParent()
         
         restorePurchasesLabel = self.childNode(withName: "restorePurchasesLabel") as! SKLabelNode
         restorePurchasesLabel.position = CGPoint(x: self.frame.width, y: self.frame.height/8 * -1 * 3)
@@ -1089,6 +1190,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             restorePurchasesLabel.position = CGPoint(x: self.frame.width, y: self.frame.height/8 * -1 * 2.25)
         }
         restorePurchasesLabel.zPosition = 3
+        restorePurchasesLabel.removeFromParent()
         
         infoBackdrop = SKShapeNode.init(rect: self.frame)
         infoBackdrop.fillColor = SKColor.black
@@ -1096,7 +1198,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         infoBackdrop.alpha = 0
         infoBackdrop.zPosition = 2
         infoBackdrop.position = CGPoint.zero
-        self.addChild(infoBackdrop)
         
         if device.isPad
         {
@@ -1119,24 +1220,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         howLabel.alpha = 0
         howLabel.zPosition = 20
         howLabel.fontColor = titleLabel.fontColor
+        howLabel.removeFromParent()
         
         unoTutLabel = self.childNode(withName: "unoTutLabel") as! SKLabelNode
         unoTutLabel.position = CGPoint(x: 0, y: howLabel.frame.minY - 25)
         unoTutLabel.alpha = 0
         unoTutLabel.zPosition = 20
         unoTutLabel.fontColor = titleLabel.fontColor
+        unoTutLabel.removeFromParent()
         
         dosTutLabel = self.childNode(withName: "dosTutLabel") as! SKLabelNode
         dosTutLabel.position = CGPoint(x: 0, y: unoTutLabel.frame.minY - 25)
         dosTutLabel.alpha = 0
         dosTutLabel.zPosition = 20
         dosTutLabel.fontColor = titleLabel.fontColor
+        dosTutLabel.removeFromParent()
         
         tresTutLabel = self.childNode(withName: "tresTutLabel") as! SKLabelNode
         tresTutLabel.position = CGPoint(x: 0, y: dosTutLabel.frame.minY - 25)
         tresTutLabel.alpha = 0
         tresTutLabel.zPosition = 20
         tresTutLabel.fontColor = titleLabel.fontColor
+        tresTutLabel.removeFromParent()
         
         leftTouch = self.childNode(withName: "leftTouch") as! SKSpriteNode
         leftTouch.position = CGPoint(x: 0 - self.frame.width/4, y: 0 - self.frame.height/8)
@@ -1144,6 +1249,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         leftTouch.zPosition = 20
         leftTouch.color = titleLabel.fontColor!
         leftTouch.colorBlendFactor = 1
+        leftTouch.removeFromParent()
         
         rightTouch = self.childNode(withName: "rightTouch") as! SKSpriteNode
         rightTouch.position = CGPoint(x: 0 + self.frame.width/4, y: 0 - self.frame.height/8)
@@ -1151,55 +1257,59 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         rightTouch.zPosition = 20
         rightTouch.color = titleLabel.fontColor!
         rightTouch.colorBlendFactor = 1
+        rightTouch.removeFromParent()
     }
     
     func slideSliders()
     {
-        for node in sliders
+        if !(scrollSpeed == 0 && sliders[0].userData!["SS"]! as! CGFloat == 0)
         {
-//            node.position.x += self.scrollSpeed
-            if (node.userData!["SS"]! as! CGFloat) != scrollSpeed
+            for node in sliders
             {
-                node.removeAllActions()
-            }
-            if node.hasActions() == false
-            {
-                let action = SKAction.moveBy(x: self.scrollSpeed * 60, y: 0, duration: 1)
-                node.userData!["SS"]! = scrollSpeed
-                node.run(action)
-            }
-            
-            var bigPos:CGFloat = 0
-            var smallPos:CGFloat = 0
-            for slider in sliders
-            {
-                if slider.position.x > bigPos
+    //            node.position.x += self.scrollSpeed
+                if (node.userData!["SS"]! as! CGFloat) != scrollSpeed
                 {
-                    bigPos = slider.position.x
+                    node.removeAllActions()
                 }
-                if slider.position.x < smallPos
+                if node.hasActions() == false
                 {
-                    smallPos = slider.position.x
+                    let action = SKAction.moveBy(x: self.scrollSpeed * 60, y: 0, duration: 1)
+                    node.userData!["SS"]! = scrollSpeed
+                    node.run(action)
                 }
-            }
-            
-            if node.position.x < self.frame.minX - node.frame.width && self.scrollSpeed != abs(self.scrollSpeed)
-            {
-                self.colors.append(self.colors[2])
-                self.colors.removeFirst()
                 
-                node.position.x = bigPos + node.frame.width
-                node.fillColor = colors.last!
-                node.name = String(colors.last!.description)
-            }
-            else if node.position.x > self.frame.maxX && self.scrollSpeed == abs(self.scrollSpeed)
-            {
-                self.colors.insert(self.colors[3], at: 0)
-                self.colors.removeLast()
+                var bigPos:CGFloat = 0
+                var smallPos:CGFloat = 0
+                for slider in sliders
+                {
+                    if slider.position.x > bigPos
+                    {
+                        bigPos = slider.position.x
+                    }
+                    if slider.position.x < smallPos
+                    {
+                        smallPos = slider.position.x
+                    }
+                }
                 
-                node.position.x = smallPos - node.frame.width
-                node.fillColor = colors.first!
-                node.name = String(colors.first!.description)
+                if node.position.x < self.frame.minX - node.frame.width && self.scrollSpeed != abs(self.scrollSpeed)
+                {
+                    self.colors.append(self.colors[2])
+                    self.colors.removeFirst()
+                    
+                    node.position.x = bigPos + node.frame.width
+                    node.fillColor = colors.last!
+                    node.name = String(colors.last!.description)
+                }
+                else if node.position.x > self.frame.maxX && self.scrollSpeed == abs(self.scrollSpeed)
+                {
+                    self.colors.insert(self.colors[3], at: 0)
+                    self.colors.removeLast()
+                    
+                    node.position.x = smallPos - node.frame.width
+                    node.fillColor = colors.first!
+                    node.name = String(colors.first!.description)
+                }
             }
         }
     }

@@ -70,8 +70,8 @@ class GameViewController: UIViewController, GADBannerViewDelegate
             
             view.ignoresSiblingOrder = true
             
-//            view.showsFPS = true
-//            view.showsNodeCount = true
+            view.showsFPS = true
+            view.showsNodeCount = true
         }
     }
 
