@@ -498,6 +498,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 self.dots = []
             }))
         }
+        score = 0
+        scoreCounterLabel.text = "0"
     }
     
     func checkHS()
