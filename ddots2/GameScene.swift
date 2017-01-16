@@ -19,7 +19,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
 {
     var sliders:[SKShapeNode]! = []
     var scrollSpeed:CGFloat = 2
-    let gameScrollSpeed:CGFloat = 14
+    let gameScrollSpeed:CGFloat = 16
     let regScrollSpeed:CGFloat = 2
     var ballSpeed:CGFloat = 1409 / -3
     let adFrequency:UInt32 = 6
@@ -458,7 +458,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             {
 //                score = score + (contact.bodyA.node?.userData!["Score"] as! Int)
 //                contact.bodyA.node?.userData?.setValue(0, forKey: "Score")
-                if contact.bodyA.node?.userData?["Type"] as? String == "Cos"
+                if contact.bodyA.node?.userData?["Type"] as? String == "Cos" && !isOnGameOver
                 {
                     contact.bodyA.node?.removeAllActions()
                     contact.bodyA.node?.userData?.setValue(ballSpeed, forKey: "dy")
@@ -469,7 +469,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             {
 //                score = score + (contact.bodyB.node?.userData!["Score"] as! Int)
 //                contact.bodyB.node?.userData?.setValue(0, forKey: "Score")
-                if contact.bodyB.node?.userData?["Type"] as? String == "Cos"
+                if contact.bodyB.node?.userData?["Type"] as? String == "Cos" && !isOnGameOver
                 {
                     contact.bodyB.node?.removeAllActions()
                     contact.bodyB.node?.userData?.setValue(ballSpeed, forKey: "dy")
