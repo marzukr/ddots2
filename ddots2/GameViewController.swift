@@ -17,7 +17,7 @@ var sharedSecret = "860b2d45c04347dc96c9c9a16bb00bca"
 let isGeimerBetaVersion = false
 
 enum RegisteredPurchase : String {
-    case NoAds = "testAd"
+    case NoAds = "noAds"
     case autoRenewable = "Auto Renewable"
 }
 
@@ -186,6 +186,13 @@ class GameViewController: UIViewController, GADBannerViewDelegate
                 if product.needsFinishTransaction
                 {
                     SwiftyStoreKit.finishTransaction(product.transaction)
+                }
+                if product.productId == self.bundleID + "." + RegisteredPurchase.NoAds.rawValue
+                {
+                    let userDefaults = Foundation.UserDefaults.standard
+                    userDefaults.set(true, forKey: "didPurchaseNoAds")
+                    self.updateNoAds()
+                    self.updateNoAdsLabel()
                 }
             }
             
