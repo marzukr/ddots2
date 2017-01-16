@@ -21,7 +21,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     var scrollSpeed:CGFloat = 2
     let gameScrollSpeed:CGFloat = 14
     let regScrollSpeed:CGFloat = 2
-    let ballSpeed:CGFloat = 1409 / -3
+    var ballSpeed:CGFloat = 1409 / -3
     let adFrequency:UInt32 = 6
     
     let redColor = UIColor(red: 242/255, green: 38/255, blue: 19/255, alpha: 1)
@@ -96,6 +96,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     var leftTouch:SKSpriteNode!
     var rightTouch:SKSpriteNode!
     
+    var level:CGFloat = 0
+    
     //MARK: END OF VARIABLES
     
     override func didMove(to view: SKView)
@@ -145,7 +147,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         }
         else
         {
-//            if isTouchingScreen && !isOnGameOver
             if !isOnGameOver
             {
                 if cAIS == nil && dots.count > 0 && isOnTutorial
@@ -192,6 +193,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     }
                 }
                 slideSliders()
+                if score % 10 == 0 && score != 0 && level*10 != CGFloat(score) && !isOnTutorial
+                {
+                    level += 1
+                    ballSpeed = ballSpeed * (1 + level*0.1)
+                }
             }
             
             for (index,dot) in dots.enumerated()
@@ -203,7 +209,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 }
                 else
                 {
-                    dot.physicsBody?.velocity.dy = ballSpeed
+//                    dot.physicsBody?.velocity.dy = ballSpeed
+                    if dot.userData?["dy"] != nil
+                    {
+                        dot.physicsBody?.velocity.dy = dot.userData?["dy"] as! CGFloat
+                    }
                     if dot.frame.maxY < sliders[0].frame.minY && dot.userData!["Score"] as! Int == 1
                     {
                         self.score = self.score + (dot.userData!["Score"] as! Int)
@@ -448,12 +458,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             {
 //                score = score + (contact.bodyA.node?.userData!["Score"] as! Int)
 //                contact.bodyA.node?.userData?.setValue(0, forKey: "Score")
+                if contact.bodyA.node?.userData?["Type"] as? String == "Cos"
+                {
+                    contact.bodyA.node?.removeAllActions()
+                    contact.bodyA.node?.userData?.setValue(ballSpeed, forKey: "dy")
+                }
                 contact.bodyA.node?.physicsBody?.velocity.dx = 0
             }
             else
             {
 //                score = score + (contact.bodyB.node?.userData!["Score"] as! Int)
 //                contact.bodyB.node?.userData?.setValue(0, forKey: "Score")
+                if contact.bodyB.node?.userData?["Type"] as? String == "Cos"
+                {
+                    contact.bodyB.node?.removeAllActions()
+                    contact.bodyB.node?.userData?.setValue(ballSpeed, forKey: "dy")
+                }
                 contact.bodyB.node?.physicsBody?.velocity.dx = 0
             }
         }
@@ -463,7 +483,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             {
                 gameOver(body: contact.bodyA)
             }
-            else if !isOnTutorial
+            else if !isOnTutorial && !isOnGameOver
             {
                 gameOver(body: contact.bodyB)
             }
@@ -475,6 +495,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     
     func presentTutorial()
     {
+        self.speed = 0.75
+        self.physicsWorld.speed = 0.75
         let fadeIn = SKAction.fadeIn(withDuration: 0.25)
         let labels = [howLabel, unoTutLabel, dosTutLabel, tresTutLabel]
         for labelE in labels
@@ -492,6 +514,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     
     func dismissTutorial()
     {
+        self.speed = 1
+        self.physicsWorld.speed = 1
         let fadeOut = SKAction.fadeAlpha(to: 0, duration: 0.25)
         let fadeIn = SKAction.fadeAlpha(to: 1, duration: 0.25)
         let labels = [howLabel, unoTutLabel, dosTutLabel, tresTutLabel]
@@ -868,6 +892,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 isOnGameOver = true
                 scrollSpeed = regScrollSpeed
                 ball.removeAllActions()
+                ball.physicsBody?.velocity = CGVector.zero
                 let shrinkAction = SKAction.scale(to: 0, duration: 0.1)
                 let explosion = SKEmitterNode(fileNamed: "dotExplode.sks")!
                 explosion.particleColorSequence = nil
@@ -877,9 +902,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 {
                     dot.run(shrinkAction, completion: ({
                         dot.removeFromParent()
+                        self.dots.removeAll()
                     }))
                 }
-                dots.removeAll()
+//                dots.removeAll()
                 self.addChild(explosion)
                 Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: ({_ in
                     explosion.removeFromParent()
@@ -900,6 +926,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     shake(times: 50)
                 }
                 
+                level = 0
                 gameOverMenuIcons()
             }
             break
@@ -916,7 +943,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 self.addChild(button)
             }
         }
-        print(shareIcon.position)
         rankIcon.position = CGPoint(x: homeIcon.position.x + 150, y: 0)
         homeIcon.run(moveRight, completion: ({
             let randNum = arc4random_uniform(self.adFrequency)
@@ -1023,18 +1049,61 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         dot.strokeColor = UIColor.clear
         dot.position = CGPoint(x: randomAbs, y: self.frame.height/2 + dot.frame.height/2)
         dot.physicsBody = SKPhysicsBody(circleOfRadius: 75/2)
-        dot.physicsBody?.affectedByGravity = false
         dot.physicsBody?.categoryBitMask = PhysicsCategory.ball
         dot.physicsBody?.collisionBitMask = PhysicsCategory.edge
         dot.physicsBody?.contactTestBitMask = PhysicsCategory.bar
-        let randomDir = arc4random_uniform(2)
-        var dx:CGFloat = 800
-        if randomDir == 0
-        {
-            dx = -800
+        
+        let randomType = arc4random_uniform(3)
+        switch randomType {
+        case 0:
+            dot.physicsBody?.affectedByGravity = false
+            let randomDir = arc4random_uniform(2)
+            var dx:CGFloat = 800 * (1 + level*0.1)
+            if randomDir == 0
+            {
+                dx = -800 * (1 + level*0.1)
+            }
+            dot.physicsBody?.velocity = CGVector(dx: dx, dy: ballSpeed)
+            dot.physicsBody?.restitution = 1
+            dot.userData?.setValue(dot.physicsBody?.velocity.dy, forKey: "dy")
+        case 1:
+            dot.physicsBody?.affectedByGravity = false
+            dot.physicsBody?.velocity = CGVector(dx: 0, dy: ballSpeed*1.25)
+            dot.userData?.setValue(dot.physicsBody?.velocity.dy, forKey: "dy")
+        case 2:
+            let a:CGFloat = 200
+            var newRandPos = CGFloat(arc4random_uniform(UInt32(self.frame.width/2 - a - 75/2 - 10)))
+            if drand48() >= 0.5
+            {
+                newRandPos = newRandPos * -1
+            }
+            
+            dot.physicsBody?.affectedByGravity = false
+            
+            let path = CGMutablePath()
+            let randLoops = CGFloat(arc4random_uniform(2) + 1)
+            var pointArray:[CGPoint] = []
+            for y in (Int(frame.minY) - 75)...(Int(frame.maxY) + 75/2)
+            {
+                let x = a * cos(randLoops/a*CGFloat(y)) + newRandPos
+                pointArray.append(CGPoint(x: x, y: CGFloat(y)))
+            }
+            for (index,point) in pointArray.reversed().enumerated()
+            {
+                if index == 0
+                {
+                    path.move(to: point)
+                }
+                else
+                {
+                    path.addLine(to: point)
+                }
+            }
+            let followLine = SKAction.follow(path, asOffset: false, orientToPath: false, speed: ballSpeed/(-1)*1.5)
+            dot.run(followLine)
+            dot.userData?.setValue("Cos", forKey: "Type")
+        default: ()
         }
-        dot.physicsBody?.velocity = CGVector(dx: dx, dy: ballSpeed)
-        dot.physicsBody?.restitution = 1
 //        let moveDown = SKAction.moveTo(y: -1 * (self.frame.height/2 + dot.frame.height/2), duration: 3)
 //        dot.run(moveDown)
         dots.append(dot)
