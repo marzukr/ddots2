@@ -21,8 +21,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
     var scrollSpeed:CGFloat = 2
     let gameScrollSpeed:CGFloat = 16
     let regScrollSpeed:CGFloat = 2
+    let startingBallSpeed:CGFloat = 1409 / -3
     var ballSpeed:CGFloat = 1409 / -3
-    let adFrequency:UInt32 = 6
+    let adFrequency:UInt32 = 7
     
     let redColor = UIColor(red: 242/255, green: 38/255, blue: 19/255, alpha: 1)
     let blueColor = UIColor(red: 25/255, green: 181/255, blue: 254/255, alpha: 1)
@@ -198,6 +199,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                     level += 1
                     ballSpeed = ballSpeed * (1 + level*0.1)
                 }
+//                print(level)
+                print(ballSpeed)
             }
             
             for (index,dot) in dots.enumerated()
@@ -927,6 +930,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
                 }
                 
                 level = 0
+                ballSpeed = startingBallSpeed
                 gameOverMenuIcons()
             }
             break
@@ -1053,9 +1057,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         dot.physicsBody?.collisionBitMask = PhysicsCategory.edge
         dot.physicsBody?.contactTestBitMask = PhysicsCategory.bar
         
-        let randomType = arc4random_uniform(3)
+        var typeChallenge:UInt32 = 1
+        if score >= 2
+        {
+            typeChallenge = 2
+        }
+        if score >= 10 || isOnTutorial
+        {
+            typeChallenge = 3
+        }
+        
+        let randomType = arc4random_uniform(typeChallenge)
         switch randomType {
-        case 0:
+        case 1:
             dot.physicsBody?.affectedByGravity = false
             let randomDir = arc4random_uniform(2)
             var dx:CGFloat = 800 * (1 + level*0.1)
@@ -1066,7 +1080,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
             dot.physicsBody?.velocity = CGVector(dx: dx, dy: ballSpeed)
             dot.physicsBody?.restitution = 1
             dot.userData?.setValue(dot.physicsBody?.velocity.dy, forKey: "dy")
-        case 1:
+        case 0:
             dot.physicsBody?.affectedByGravity = false
             dot.physicsBody?.velocity = CGVector(dx: 0, dy: ballSpeed*1.25)
             dot.userData?.setValue(dot.physicsBody?.velocity.dy, forKey: "dy")

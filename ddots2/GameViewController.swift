@@ -14,7 +14,7 @@ import SwiftyStoreKit
 import StoreKit
 
 var sharedSecret = "860b2d45c04347dc96c9c9a16bb00bca"
-let isGeimerBetaVersion = false
+let isGeimerBetaVersion = true
 
 enum RegisteredPurchase : String {
     case NoAds = "noAds"
@@ -70,8 +70,8 @@ class GameViewController: UIViewController, GADBannerViewDelegate
             
             view.ignoresSiblingOrder = true
             
-            view.showsFPS = true
-            view.showsNodeCount = true
+//            view.showsFPS = true
+//            view.showsNodeCount = true
         }
     }
 
