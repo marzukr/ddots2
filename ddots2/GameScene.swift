@@ -1057,17 +1057,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate, GKGameCenterControllerDelega
         dot.physicsBody?.collisionBitMask = PhysicsCategory.edge
         dot.physicsBody?.contactTestBitMask = PhysicsCategory.bar
         
-        var typeChallenge:UInt32 = 1
-        if score >= 2
+//        var typeChallenge:UInt32 = 1
+        var randomType:UInt32 = 1
+        if score < 2
         {
-            typeChallenge = 2
+            randomType = 0
         }
-        if score >= 10 || isOnTutorial
+        if score >= 2 && score < 8
         {
-            typeChallenge = 3
+            randomType = arc4random_uniform(2)
+        }
+        if score >= 8
+        {
+            let typeProb = arc4random_uniform(18)
+            if typeProb >= 15
+            {
+                randomType = 2
+            }
+            else if typeProb >= 6
+            {
+                randomType = 1
+            }
+            else if typeProb >= 0
+            {
+                randomType = 0
+            }
+        }
+        if isOnTutorial
+        {
+            randomType = arc4random_uniform(3)
         }
         
-        let randomType = arc4random_uniform(typeChallenge)
         switch randomType {
         case 1:
             dot.physicsBody?.affectedByGravity = false
